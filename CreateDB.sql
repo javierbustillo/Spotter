@@ -17,7 +17,7 @@ spotify_id INTEGER PRIMARY KEY
 
 CREATE TABLE User_tracks (
    user_id INTEGER REFERENCES Users (spotify_id),
-   track_id INTEGER REFERENCES Tracks (tid),
+   track_id INTEGER REFERENCES Tracks (tid)
 
 );
 
