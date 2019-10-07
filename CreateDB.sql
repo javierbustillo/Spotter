@@ -1,12 +1,12 @@
 CREATE TABLE Users (
-    spotify_id INTEGER PRIMARY KEY,
+    spotify_id VARCHAR(500) PRIMARY KEY,
     access_token VARCHAR(500),
     refresh_token VARCHAR(500)
 );
 
 CREATE TABLE Tracks (
     tid SERIAL PRIMARY KEY,
-    spotify_id INTEGER,
+    spotify_id VARCHAR(500),
     term INTEGER,
     pos INTEGER
 );

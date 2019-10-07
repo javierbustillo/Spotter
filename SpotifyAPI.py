@@ -8,7 +8,7 @@ class SpotifyAPI:
 
     def request_data(self, url, token=None):
         header = {'Authorization': 'Bearer ' + token} if token else None
-        response = requests.get(url, headers=header)
+        response = requests.get(self.base_url + url, headers=header)
         return json.loads(response.text)
 
     def get_user(self, access_token):
@@ -23,7 +23,13 @@ class SpotifyAPI:
             tracks = self.request_data('/me/top/tracks?time_range=%s&limit=50' % range, token)['items']
             for position, track in enumerate(tracks):
                 spotify_id = track['id']
-                user_tracks.append((spotify_id, range, position))
+                if range == 'short_term':
+                    range_int = 0
+                elif range == 'medium_term':
+                    range_int = 1
+                else:
+                    range_int = 2
+                user_tracks.append((spotify_id, range_int, position))
         return user_tracks
 
 

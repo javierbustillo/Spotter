@@ -10,9 +10,9 @@ def hello_world():
     return 'Hello World!'
 
 
-@app.route('/register')
+@app.route('/register', methods=['POST'])
 def register():
-    return UserHandler().create_user(request.json)
+    return UserHandler().create_user(request.form)
 
 
 if __name__ == '__main__':
