@@ -1,4 +1,6 @@
-from flask import Flask
+from flask import Flask, request
+
+from Handlers.users_handler import UserHandler
 
 app = Flask(__name__)
 
@@ -7,9 +9,10 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello World!'
 
+
 @app.route('/register')
 def register():
-    pass
+    return UserHandler().create_user(request.json)
 
 
 if __name__ == '__main__':
