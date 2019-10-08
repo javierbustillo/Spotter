@@ -12,6 +12,9 @@ class UserHandler(Handler):
     def create_user(self, json_dict):
         access_token = json_dict['access_token']
         refresh_token = json_dict['refresh_token']
+        print(access_token)
+        print(refresh_token)
+        print(json_dict)
 
         spotify_id = self.SpotifyAPI.get_user(access_token)['id']
         self.model.create_user(spotify_id, access_token, refresh_token)
