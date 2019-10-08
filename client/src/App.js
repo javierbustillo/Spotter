@@ -52,6 +52,8 @@ class App extends Component {
       })
     }
   }
+
+  
   getHashParams() {
     var hashParams = {};
     var e, r = /([^&;=]+)=?([^&;]*)/g,

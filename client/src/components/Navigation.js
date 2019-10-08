@@ -26,7 +26,7 @@ class Navigation extends Component{
         return(
             <div className="navbar-container">
                 <Navbar className="navbar-header">
-                    <NavbarBrand href="/" className="navbar-header">Spotter</NavbarBrand>
+                    <NavLink href="/" className="navbar-text">Spotter</NavLink>
                     <a href="http://localhost:8888">
                         <Button className="login-button">Login</Button>
                     </a>
