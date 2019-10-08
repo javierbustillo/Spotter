@@ -15,8 +15,9 @@ def hello_world():
 
 @app.route('/register', methods=['POST'])
 def register():
-    print(request)
+    print('This is json:')
     print(request.json)
+    print('\n\n\n\n\nThis is form[0]')
     print(request.form[0])
     return UserHandler().create_user(request.form[0])
 
