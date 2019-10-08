@@ -17,8 +17,8 @@ def hello_world():
 def register():
     print(request)
     print(request.json)
-    print(request.form)
-    return UserHandler().create_user(request.form)
+    print(request.form[0])
+    return UserHandler().create_user(request.form[0])
 
 
 if __name__ == '__main__':
