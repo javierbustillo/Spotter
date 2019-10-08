@@ -1,6 +1,9 @@
 import requests
 import json
 
+from Models.artists import Artists
+from Models.tracks import Tracks
+
 
 class SpotifyAPI:
 
@@ -15,25 +18,30 @@ class SpotifyAPI:
         user_info = self.request_data('/me', access_token)
         return user_info
 
-    def get_user_tracks(self, token):
-        # TODO: THIS
+    def get_user_top(self, token, type_of_top=None):
+        enumerated = enumerate
         ranges = ['long_term', 'medium_term', 'short_term']
-        user_tracks = []
-        for range in ranges:
-            tracks = self.request_data('/me/top/tracks?time_range=%s&limit=50' % range, token)['items']
-            for position, track in enumerate(tracks):
-                spotify_id = track['id']
-                if range == 'short_term':
-                    range_int = 0
-                elif range == 'medium_term':
-                    range_int = 1
-                else:
-                    range_int = 2
-                user_tracks.append((spotify_id, range_int, position))
-        return user_tracks
+        users_tops = []
+        types = [type_of_top] if type_of_top is not None else ['artists', 'tracks']
+        for type_top in types:
+            for term in ranges:
+                tops = self.request_data('/me/top/%s?time_range=%s&limit=50' % (type_top, term), token)['items']
+                for position, top in enumerated(tops):
+                    spotify_id = top['id']
+                    if term == 'short_term':
+                        term_int = 0
+                    elif term == 'medium_term':
+                        term_int = 1
+                    else:
+                        term_int = 2
+                    obj = Artists if type_top == 'artists' else Tracks
+                    top_obj = obj(spotify_id, term_int, position)
+                    users_tops.append(top_obj)
+        return users_tops
 
-
+    def get_user_tracks(self, token):
+        return self.get_user_top(token, 'tracks')
 
     def get_user_artists(self, token):
-        pass
+        return self.get_user_top(token, 'artists')
 
