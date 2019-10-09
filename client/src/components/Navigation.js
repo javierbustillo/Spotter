@@ -2,12 +2,7 @@ import React, {Component} from 'react';
 import Spotify from 'spotify-web-api-js'
 import '../styles/Navigation.css'
 import {
-    Collapse,
     Navbar,
-    NavbarToggler,
-    NavbarBrand,
-    Nav,
-    NavItem,
     NavLink,
     Button
      } from 'reactstrap';
@@ -22,14 +17,16 @@ class Navigation extends Component{
         }
     }
 
+    
+
     render(){
         return(
             <div className="navbar-container">
                 <Navbar className="navbar-header">
                     <NavLink href="/" className="navbar-text">Spotter</NavLink>
                     <a href="http://localhost:8888">
-                        <Button className="login-button">Login</Button>
-                    </a>
+                        <Button className="login-button" color="primary">Login</Button>
+                    </a>                
                 </Navbar>
             </div>
         )

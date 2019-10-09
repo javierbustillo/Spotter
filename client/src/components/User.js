@@ -10,8 +10,8 @@ class User extends Component{
     constructor(){
         super();
         this.state = {
-            access_token: sessionStorage.getItem('access_token') ? sessionStorage.getItem('access_token') : '',
-            refresh_token: sessionStorage.getItem('refresh_token') ? sessionStorage.getItem('refresh_token') : '',
+            access_token: sessionStorage.getItem('access_token') ? sessionStorage.getItem('access_token') : null,
+            refresh_token: sessionStorage.getItem('refresh_token') ? sessionStorage.getItem('refresh_token') : null,
             displayName:'',
             userEmail:'',
             userImage:'',
@@ -64,6 +64,46 @@ class User extends Component{
 
     }
 
+    renderUserInfo(){
+        if(this.state.displayName == ''){
+            return(
+                <div>
+                    <p className="empty-info-text">Login to View your Information</p>
+                </div>
+            )
+        }else{
+            return(
+                <div className="user-container">
+                    <div className="user-info">
+                        <img className="user-image" src={this.state.userImage}/>
+                        <div className="user-name-container">
+                            <p className="user-displayName">{this.state.displayName}</p>
+                            <p className="user-email">{this.state.userEmail}</p>
+                        </div>
+                        
+
+                    </div>
+                    <div className="recently-played">
+                        <img className="song-thumbnail" src={this.state.nowPlaying.image}/>
+                        <p className="song-name">Now Listening to: {this.state.nowPlaying.name}</p>
+                    </div>
+                </div>
+            )
+        }
+    }
+
+    renderTables(){
+        if(this.state.topArtists === '' || this.state.topTracks === ''){
+            return(
+                <div>
+                    <p className="empty-info-text">Login to View your Information</p>
+                </div>
+            )
+        }else{
+            
+        }
+    }
+
     render(){
         
             const songs = this.state.topTracks;
@@ -77,7 +117,7 @@ class User extends Component{
                 )
             })
 
-    
+            
             const artists = this.state.topArtists;
             const artistList = Object.keys(artists).map(artist=>{
                 return(
@@ -87,6 +127,7 @@ class User extends Component{
                         </td>
                     </tr>
                 )
+                
             })
 
         
@@ -94,24 +135,15 @@ class User extends Component{
 
         return(
             <div>
-                <div className="user-info">
-                    <img className="user-image" src={this.state.userImage}/>
-                    <div className="user-name-container">
-                        <p className="user-displayName">{this.state.displayName}</p>
-                        <p className="user-email">{this.state.userEmail}</p>
-                    </div>
-                    
-
-                </div>
                 
-                <img className="song-thumbnail" src={this.state.nowPlaying.image}/>
-                <p>Now Listening to: {this.state.nowPlaying.name}</p>
+                
+                {this.renderUserInfo()}
 
                 <div className="tables-container">
                     <Table striped id="songTable">
                         <thead>
                             <tr>
-                                <td className="table-head">Top Songs</td>
+                                <td className="table-head">Top Tracks</td>
                             </tr>
                         </thead>
                         <tbody>

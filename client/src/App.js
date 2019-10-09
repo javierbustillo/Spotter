@@ -65,16 +65,11 @@ class App extends Component {
   }
 
   render(){
+    
+
     return (
       <div className="App">
         <Navigation/>
-        {/* <a href="http://localhost:8888">
-          <button>Login with Spotify</button>
-
-        </a> */}
-        {/* <p> Access Token: {this.state.access_token}</p>
-          <p> Refresh Token: {this.state.refresh_token}</p> */}
-        {/* <button onClick={()=>this.getUserInfo()}>Get User Playlist</button> */}
         <User/>
       </div>
     );
