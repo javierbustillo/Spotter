@@ -20,6 +20,7 @@ class SpotifyAPI:
 
     def get_user_top(self, token, type_of_top=None):
         enumerated = enumerate
+        user_id = self.get_user(token)['id']
         ranges = ['long_term', 'medium_term', 'short_term']
         users_tops = []
         types = [type_of_top] if type_of_top is not None else ['artists', 'tracks']
@@ -35,7 +36,7 @@ class SpotifyAPI:
                     else:
                         term_int = 2
                     obj = Artists if type_top == 'artists' else Tracks
-                    top_obj = obj(spotify_id, term_int, position)
+                    top_obj = obj(spotify_id, term_int, position, user_id)
                     users_tops.append(top_obj)
         return users_tops
 
