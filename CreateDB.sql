@@ -1,5 +1,5 @@
 CREATE TABLE Users (
-    spotify_id BIGINT PRIMARY KEY,
+    spotify_id VARCHAR(500) PRIMARY KEY,
     access_token VARCHAR(500),
     refresh_token VARCHAR(500)
 );
@@ -9,7 +9,7 @@ CREATE TABLE Tracks (
     spotify_id VARCHAR(500),
     term INTEGER,
     pos INTEGER,
-    user_id BIGINT REFERENCES Users (spotify_id)
+    user_id varchar(500) REFERENCES Users (spotify_id)
 
 );
 
@@ -18,5 +18,5 @@ CREATE TABLE Artists(
     spotify_id VARCHAR(500),
     term INTEGER,
     pos INTEGER,
-    user_id BIGINT REFERENCES Users (spotify_id)
+    user_id varchar(500) REFERENCES Users (spotify_id)
     );

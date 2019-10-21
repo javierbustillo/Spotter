@@ -34,4 +34,10 @@ class UserHandler(Handler):
             matches.append(common_user)
 
         matches.sort(key=lambda x: x.match_value, reverse=True)
-        return jsonify(matches[0].match_value)
+        dict_match = []
+        for match in matches:
+            match_dict = match.__dict__
+            match_dict.pop('conn')
+            match_dict.pop('URL')
+            dict_match.append(match_dict)
+        return jsonify(dict_match)

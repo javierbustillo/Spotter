@@ -21,3 +21,5 @@ class Artists(Model):
         self.commit()
         self.conn.close()
 
+    def __repr__(self):
+        return 'Artist Spotify_id: %s term: %s position: %s user_id: %s' % (self.spotify_id, self.term, self.pos, self.user_id)

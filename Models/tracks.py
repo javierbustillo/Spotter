@@ -21,3 +21,7 @@ class Tracks(Model):
         cursor.execute(query, (self.spotify_id, self.term, self.pos, self.user_id))
         self.commit()
         self.conn.close()
+
+    def __repr__(self):
+        return 'Track Spotify_id: %s term: %s position: %s user_id: %s' % (self.spotify_id, self.term, self.pos, self.user_id)
+
