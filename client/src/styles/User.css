@@ -1,0 +1,85 @@
+.user-info{
+    display:flex;
+    flex-direction:row;
+    padding-top:90px;
+}
+
+.user-displayName{
+    font-size:36px;
+    font-weight: 600;
+}
+
+.user-email{
+    font-size: 24px;
+    font-weight:600;
+}
+
+.user-name-container{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 45px;
+
+}
+
+.user-image{
+    height:200px;
+    width:200px;
+    border-radius:50%;
+    margin-left:45px;
+    margin-top: 45px;
+    margin-right:20px;
+
+}
+
+.tables-container{
+    display:flex;
+    flex-direction:row;
+    margin:15px;
+}
+
+.song-thumbnail{
+    height:100px;
+    width:100px;
+    margin-left:45px;
+    margin-top: 45px;
+    margin-right:20px;
+}
+
+.table-head{
+    font-size:24px;
+    font-weight:500;
+}
+
+#songTable.table-striped>tbody>tr:nth-of-type(odd){
+    background-color:rgba(15, 221, 87, 0.24);
+ }
+
+ #artistTable.table-striped>tbody>tr:nth-of-type(odd){
+    background-color:rgba(15, 221, 87, 0.24);
+ }
+
+ .song-name{
+     font-size:24px;
+     font-weight:500;
+     margin-top: 20px;
+ }
+
+ .user-container{
+     display:flex;
+     flex-direction: row;
+ }
+ .recently-played{
+    margin-top:45px;
+    justify-self: center;
+    align-self:center;
+    margin-left:360px;
+ }
+
+ .empty-info-text{
+     padding-top:100px;
+     font-size:34px;
+     font-weight: 400;
+     align-self:center;
+     justify-self: center;
+ }
