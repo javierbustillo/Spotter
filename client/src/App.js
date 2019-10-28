@@ -4,6 +4,13 @@ import './App.css';
 import Spotify from 'spotify-web-api-js'
 import Navigation from './components/Navigation'
 import User from './components/User'
+import Match from './components/Match'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
 const spotifyWebApi = new Spotify();
 const axios = require('axios');
@@ -69,8 +76,36 @@ class App extends Component {
 
     return (
       <div className="App">
-        <Navigation/>
-        <User/>
+      <Navigation/>
+
+      <Router>
+      <div>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/match">About</Link>
+            </li>
+            <li>
+              <Link to="/user">Users</Link>
+            </li>
+          </ul>
+        </nav>
+
+        {/* A <Switch> looks through its children <Route>s and
+            renders the first one that matches the current URL. */}
+        <Switch>
+          <Route path="/user">
+            <User />
+          </Route>
+          <Route path="/match">
+            <Match />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
       </div>
     );
   }
