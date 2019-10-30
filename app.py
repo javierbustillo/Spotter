@@ -18,5 +18,10 @@ def register():
     return UserHandler().create_user(request.json)
 
 
+@app.route('/users/match', methods=['POST'])
+def match():
+    return UserHandler().get_matches(request.json)
+
+
 if __name__ == '__main__':
     app.run()
