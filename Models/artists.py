@@ -23,3 +23,6 @@ class Artists(Model):
 
     def __repr__(self):
         return 'Artist Spotify_id: %s term: %s position: %s user_id: %s' % (self.spotify_id, self.term, self.pos, self.user_id)
+
+    def __eq__(self, other):
+        return self.spotify_id == other.spotify_id
