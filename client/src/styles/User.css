@@ -83,3 +83,27 @@
      align-self:center;
      justify-self: center;
  }
+
+ .match-container{
+    justify-content: center;
+    align-content: center;
+    margin-top:25vh;
+
+ }
+
+ .match-button{
+     background-color:#1DB954;
+     color:white;
+     margin-left:300px;
+     padding:10px;
+     border-style:solid;
+     border-width:1px;
+     border-radius:10px;
+     font-size:30px;
+ }
+
+ .match-button:hover{
+     color:black;
+     text-decoration: none;
+     background-color:rgb(22, 163, 71);
+ }

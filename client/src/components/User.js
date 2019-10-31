@@ -47,15 +47,15 @@ class User extends Component{
 
         })
 
-        spotifyWebApi.getMyCurrentPlaybackState().then((res)=>{
-            this.setState({
-                nowPlaying:{
-                    name: res.item.name,
-                    image: res.item.album.images[0].url
-                }
-            })
-            console.log(res);
-        })
+        // spotifyWebApi.getMyCurrentPlaybackState().then((res)=>{
+        //     this.setState({
+        //         nowPlaying:{
+        //             name: res.item.name,
+        //             image: res.item.album.images[0].url
+        //         }
+        //     })
+        //     console.log(res);
+        // })
 
         //this.loadTable();
         spotifyWebApi.getMyTopTracks().then((res) => {
@@ -86,14 +86,17 @@ class User extends Component{
                             <p className="user-displayName">{this.state.displayName}</p>
                             <p className="user-email">{this.state.userEmail}</p>
                         </div>
-                        <Link to="/match">Match</Link>
+                        
                         
 
                     </div>
-                    <div className="recently-played">
+                    <div className="match-container">
+                        <Link className="match-button" to="/match">Calculate your Matches</Link>
+                    </div>
+                    {/* <div className="recently-played">
                         <img className="song-thumbnail" src={this.state.nowPlaying.image}/>
                         <p className="song-name">Now Listening to: {this.state.nowPlaying.name}</p>
-                    </div>
+                    </div> */}
                 </div>
             )
         }

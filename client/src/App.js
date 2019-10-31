@@ -5,11 +5,13 @@ import Spotify from 'spotify-web-api-js'
 import Navigation from './components/Navigation'
 import User from './components/User'
 import Match from './components/Match'
+import Home from './components/Home'
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from "react-router-dom";
 
 const spotifyWebApi = new Spotify();
@@ -80,7 +82,7 @@ class App extends Component {
 
       <Router>
       <div>
-        <nav>
+        {/* <nav>
           <ul>
             <li>
               <Link to="/">Home</Link>
@@ -92,11 +94,14 @@ class App extends Component {
               <Link to="/user">Users</Link>
             </li>
           </ul>
-        </nav>
+        </nav> */}
 
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
+          <Route exact path="/">
+            {this.state.loggedIn ? <Redirect to="/user" /> : <Home/>}
+          </Route>
           <Route path="/user">
             <User />
           </Route>
