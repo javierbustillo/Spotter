@@ -2,6 +2,13 @@ import React, {Component} from 'react';
 import {Table} from 'reactstrap'
 import Spotify from 'spotify-web-api-js'
 import '../styles/User.css'
+import '../styles/Match.css'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+  } from "react-router-dom";
 
 
 const spotifyWebApi = new Spotify();
@@ -24,7 +31,8 @@ class Match extends Component{
             },
             matchList:'',
             artistLoaded:true,
-            songsLoaded: false
+            songsLoaded: false,
+            isLoading:true
         }
 
         if(sessionStorage.getItem('access_token') !== null){
@@ -107,6 +115,9 @@ class Match extends Component{
                         
 
                     </div>
+                    <div className="match-container">
+                        <Link className="match-button" to="/user">View Profile</Link>
+                    </div>
                     
                 </div>
             )
@@ -135,7 +146,7 @@ class Match extends Component{
                             {matches[match].spotify_id}
                         </td>
                         <td>
-                            {matches[match].match_value}
+                            {matches[match].match_value.toFixed(2)}
                         </td>
                     </tr>
                 )
@@ -164,12 +175,17 @@ class Match extends Component{
                 {this.renderUserInfo()}
 
                 <div className="tables-container">
+                    <p>Matches</p>
                     <Table striped id="songTable">
                         <thead>
                             <tr>
-                                <td className="table-head">Matches</td>
+                                <td className="table-head">Display Name</td>
+                                <td className="table-head">Match Value</td>
+
+
                             </tr>
                         </thead>
+                        
                         <tbody>
                             {matchList}
                         </tbody>
