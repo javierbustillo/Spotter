@@ -100,7 +100,7 @@ class App extends Component {
             renders the first one that matches the current URL. */}
         <Switch>
           <Route exact path="/">
-            {this.state.loggedIn ? <Redirect to="/user" /> : <Home/>}
+            {this.state.loggedIn ? <Redirect to="/user" /> : <User/>}
           </Route>
           <Route path="/user">
             <User />

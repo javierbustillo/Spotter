@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Table} from 'reactstrap'
 import Spotify from 'spotify-web-api-js'
-import '../styles/User.css'
 import '../styles/Match.css'
 import {
     BrowserRouter as Router,
@@ -136,6 +135,16 @@ class Match extends Component{
         }
     }
 
+    showLoading(){
+        if(this.state.matchList === ''){
+            return(
+                <div>
+                    <p className="loading-message">Calculating your matches...</p>
+                </div>
+            )
+        }
+    }
+
     render(){
         
             const matches = this.state.matchList;
@@ -143,53 +152,38 @@ class Match extends Component{
                 return(
                     <tr>
                         <td>
-                            {matches[match].spotify_id}
+                            <p className="match-display-name">{matches[match].display_name}</p>
                         </td>
                         <td>
-                            {matches[match].match_value.toFixed(2)}
+                            <p className="match-value">{matches[match].match_value.toFixed(2)}</p>
                         </td>
                     </tr>
                 )
             })
 
-            
-            // const artists = this.state.topArtists;
-            // const artistList = Object.keys(artists).map(artist=>{
-            //     return(
-            //         <tr>
-            //             <td>
-            //                 {artists[artist].name}
-            //             </td>
-            //         </tr>
-            //     )
-                
-            // })
-
-        
-
 
         return(
             <div>
-                
-                
                 {this.renderUserInfo()}
 
-                <div className="tables-container">
-                    <p>Matches</p>
+                <p className="table-header">Match Results</p>
+                <div className="table-container">
                     <Table striped id="songTable">
                         <thead>
                             <tr>
                                 <td className="table-head">Display Name</td>
                                 <td className="table-head">Match Value</td>
-
-
                             </tr>
                         </thead>
                         
                         <tbody>
+
                             {matchList}
                         </tbody>
                     </Table>
+
+                    {this.showLoading()}
+
                     {/* <Table striped id="artistTable">
                         <thead>
                             <tr>
