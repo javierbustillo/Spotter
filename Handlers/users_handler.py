@@ -34,7 +34,7 @@ class UserHandler(Handler):
         user = Users(spotify_id, None, None)
         users_common = user.get_users_common()
 
-        # Calculate and store the match for each, maybe discard if value is less than threshold
+        # Calculate the match value for each match
         matches = []
         for common_user in users_common:
             user.calculate_match(common_user)
