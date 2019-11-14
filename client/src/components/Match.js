@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Table} from 'reactstrap'
 import Spotify from 'spotify-web-api-js'
-import '../styles/User.css'
+import '../styles/Match.css'
 import {
     BrowserRouter as Router,
     Switch,
@@ -9,10 +9,13 @@ import {
     Link
   } from "react-router-dom";
 
+
 const spotifyWebApi = new Spotify();
+const axios = require('axios');
 
 
-class User extends Component{
+
+class Match extends Component{
     constructor(){
         super();
         this.state = {
@@ -25,15 +28,35 @@ class User extends Component{
                 name: '',
                 image: ''
             },
-            topTracks:'',
-            topArtists:'',
+            matchList:'',
             artistLoaded:true,
-            songsLoaded: false
+            songsLoaded: false,
+            isLoading:true
         }
 
         if(sessionStorage.getItem('access_token') !== null){
             spotifyWebApi.setAccessToken(this.state.access_token);
         }
+
+        const instance = axios.create({
+            timeout: 36000,
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+         
+        instance.post('https://spotter-flask.herokuapp.com/users/match', {
+            access_token: this.state.access_token,
+        })
+        .then((res)=>{
+            console.log(res.data);
+            this.setState({
+                matchList: res.data
+            })
+        })
+        .catch((error)=>  {
+            console.log("Error: " + error);
+        });
     }
 
     componentWillMount(){
@@ -47,6 +70,8 @@ class User extends Component{
 
         })
 
+        //post to /users/match => access_token
+
         // spotifyWebApi.getMyCurrentPlaybackState().then((res)=>{
         //     this.setState({
         //         nowPlaying:{
@@ -58,14 +83,14 @@ class User extends Component{
         // })
 
         //this.loadTable();
-        spotifyWebApi.getMyTopTracks().then((res) => {
-            this.setState({topTracks:res.items})
-            //console.log(this.state.topTracks)
-        })
+        // spotifyWebApi.getMyTopTracks().then((res) => {
+        //     this.setState({topTracks:res.items})
+        //     //console.log(this.state.topTracks)
+        // })
 
-        spotifyWebApi.getMyTopArtists().then((res) => {
-            this.setState({topArtists:res.items})
-        })
+        // spotifyWebApi.getMyTopArtists().then((res) => {
+        //     this.setState({topArtists:res.items})
+        // })
 
 
     }
@@ -87,16 +112,12 @@ class User extends Component{
                             <p className="user-email">{this.state.userEmail}</p>
                         </div>
                         
-                        
 
                     </div>
                     <div className="match-container">
-                        <Link className="match-button" to="/match">Calculate your Matches</Link>
+                        <Link className="match-button" to="/user">View Profile</Link>
                     </div>
-                    {/* <div className="recently-played">
-                        <img className="song-thumbnail" src={this.state.nowPlaying.image}/>
-                        <p className="song-name">Now Listening to: {this.state.nowPlaying.name}</p>
-                    </div> */}
+                    
                 </div>
             )
         }
@@ -114,53 +135,56 @@ class User extends Component{
         }
     }
 
+    showLoading(){
+        if(this.state.matchList === ''){
+            return(
+                <div>
+                    <p className="loading-message">Calculating your matches...</p>
+                </div>
+            )
+        }
+    }
+
     render(){
         
-            const songs = this.state.topTracks;
-            const songsList = Object.keys(songs).map(song=>{
+            const matches = this.state.matchList;
+            const matchList = Object.keys(matches).map(match=>{
                 return(
                     <tr>
                         <td>
-                            {songs[song].name}
+                            <p className="match-display-name">{matches[match].display_name}</p>
+                        </td>
+                        <td>
+                            <p className="match-value">{matches[match].match_value.toFixed(2)}</p>
                         </td>
                     </tr>
                 )
             })
-
-            
-            const artists = this.state.topArtists;
-            const artistList = Object.keys(artists).map(artist=>{
-                return(
-                    <tr>
-                        <td>
-                            {artists[artist].name}
-                        </td>
-                    </tr>
-                )
-                
-            })
-
-        
 
 
         return(
             <div>
-                
-                
                 {this.renderUserInfo()}
 
-                <div className="tables-container">
+                <p className="table-header">Match Results</p>
+                <div className="table-container">
                     <Table striped id="songTable">
                         <thead>
                             <tr>
-                                <td className="table-head">Top Tracks</td>
+                                <td className="table-head">Display Name</td>
+                                <td className="table-head">Match Value</td>
                             </tr>
                         </thead>
+                        
                         <tbody>
-                            {songsList}
+
+                            {matchList}
                         </tbody>
                     </Table>
-                    <Table striped id="artistTable">
+
+                    {this.showLoading()}
+
+                    {/* <Table striped id="artistTable">
                         <thead>
                             <tr>
                                 <td className="table-head">Top Artists</td>
@@ -169,11 +193,11 @@ class User extends Component{
                         <tbody>
                             {artistList}
                         </tbody>
-                    </Table>
+                    </Table> */}
                 </div>
             </div>
         )
     }
 }
 
-export default User;
+export default Match;
