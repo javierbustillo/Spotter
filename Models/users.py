@@ -102,8 +102,8 @@ class Users(Model):
     # TODO: Refactor _count_common into three different methods
     def calculate_match(self, common_user, common_weight=0.8, common_terms_weight=0.1, common_position_weight=0.1,
                         artist_weight=0.5, track_weight=0.5):
-        all_user_tracks = self.get_user_tracks()
-        all_user_artists = self.get_user_artists()
+        all_user_tracks = self.get_user_top_tracks()
+        all_user_artists = self.get_user_top_artists()
 
         all_common_user_tracks = common_user.get_user_top_tracks()
         all_common_user_artists = common_user.get_user_top_artists()
