@@ -26,17 +26,17 @@ class Users(Model):
     match_value = 0
     threshold = 1
 
-    def __init__(self, spotify_id, access_token, refresh_token):
+    def __init__(self, spotify_id, access_token, tw_profile, inst_profile):
         super(Users, self).__init__()
         self.spotify_id = spotify_id
         self.access_token = access_token
-        self.refresh_token = refresh_token
-        self.Calculator = MatchCalculator()
+        self.tw_profile = tw_profile
+        self.inst_profile = inst_profile
 
     def create_user(self):
         cursor = self.get_cursor()
-        query = 'INSERT INTO users (spotify_id, access_token, refresh_token) VALUES (%s,%s,%s)'
-        cursor.execute(query, (self.spotify_id, self.access_token, self.refresh_token))
+        query = 'INSERT INTO users (spotify_id, access_token, tw_profile, inst_profile) VALUES (%s,%s,%s, %s)'
+        cursor.execute(query, (self.spotify_id, self.access_token, self.tw_profile, self.inst_profile))
         self.commit()
 
     def get_users_common(self):
