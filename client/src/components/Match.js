@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Table} from 'reactstrap'
+import {Table, Media} from 'reactstrap'
 import Spotify from 'spotify-web-api-js'
 import '../styles/Match.css'
 import {
@@ -8,6 +8,9 @@ import {
     Route,
     Link
   } from "react-router-dom";
+
+  import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 
 const spotifyWebApi = new Spotify();
@@ -148,7 +151,6 @@ class Match extends Component{
     render(){
         
             const matches = this.state.matchList;
-            console.log(matches)
             const matchList = Object.keys(matches).map(match=>{
                 return(
                     // <Media>
@@ -177,24 +179,92 @@ class Match extends Component{
 
 
         return(
-            <div>
+            <div className="main-container">
                 {this.renderUserInfo()}
 
                 <p className="table-header">Match Results</p>
-                <div className="table-container">
-                    <Table striped id="songTable">
-                        <thead>
-                            <tr>
-                                <td className="table-head">Display Name</td>
-                                <td className="table-head">Match Value</td>
-                            </tr>
-                        </thead>
-                        
-                        <tbody>
+                <div className="match-cards-container">
+                    <Media className="match-card">
+                         {/* User Image */}
+                         <Media className="match-image" left href="#">
+                            <img className="match-image"src={this.state.userImage}/>
+                         </Media>
+                         {/* Display Name y other info */}
+                         <Media className="match-name">
+                             John Smith
+                         </Media>
+                         <Media className="match-percent">
+                             <CircularProgressbar  
+                             styles={buildStyles({
+                                pathColor: '#1DB954',
+                                textColor:'#1DB954',
+                                textSize: '30px',
 
+                            })}
+                                 value="90" text="90" />
+                         </Media>
+                     </Media>
+                     <Media className="match-card">
+                         {/* User Image */}
+                         <Media className="match-image" left href="#">
+                            <img className="match-image"src={this.state.userImage}/>
+                         </Media>
+                         {/* Display Name y other info */}
+                         <Media className="match-name">
+                             John Smith
+                         </Media>
+                         <Media className="match-percent">
+                             <CircularProgressbar  
+                             styles={buildStyles({
+                                pathColor: '#1DB954',
+                                textColor:'#1DB954',
+                                textSize: '30px',
+
+                            })}
+                                 value="85" text="85" />
+                         </Media>
+                     </Media>
+                     <Media className="match-card">
+                         {/* User Image */}
+                         <Media className="match-image" left href="#">
+                            <img className="match-image"src={this.state.userImage}/>
+                         </Media>
+                         {/* Display Name y other info */}
+                         <Media className="match-name">
+                             John Smith
+                         </Media>
+                         <Media className="match-percent">
+                             <CircularProgressbar  
+                             styles={buildStyles({
+                                pathColor: '#1DB954',
+                                textColor:'#1DB954',
+                                textSize: '30px',
+
+                            })}
+                                 value="80" text="80" />
+                         </Media>
+                     </Media>
+                     <Media className="match-card">
+                         {/* User Image */}
+                         <Media className="match-image" left href="#">
+                            <img className="match-image"src={this.state.userImage}/>
+                         </Media>
+                         {/* Display Name y other info */}
+                         <Media className="match-name">
+                             John Smith
+                         </Media>
+                         <Media className="match-percent">
+                             <CircularProgressbar  
+                             styles={buildStyles({
+                                pathColor: '#1DB954',
+                                textColor:'#1DB954',
+                                textSize: '30px',
+
+                            })}
+                                 value="50" text="50" />
+                         </Media>
+                     </Media>
                             {matchList}
-                        </tbody>
-                    </Table>
 
                     {this.showLoading()}
 

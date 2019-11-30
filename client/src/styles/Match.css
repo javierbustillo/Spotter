@@ -1,3 +1,7 @@
+.main-container{
+    background-color: #191414;
+}
+
 .table-head{
     font-size:24px;
     font-weight:500;
@@ -5,15 +9,12 @@
     
 }
 
-.match_image{
-    height:150px;
-    width:150px;
-}
+
 
 .table-header{
     color:#1DB954;
     font-size:38px;
-    weight:700;
+    font-weight:700;
 }
 
 .table-container{
@@ -40,4 +41,50 @@
     font-size:18px;
     font-weight:700;
     justify-self: center;
+}
+
+.match-card{
+    color:white;
+    border-radius: 10px;
+    margin-left:50px;
+    margin-right:50px;
+    margin-bottom:50px;
+    background-color:#3b3a3a;
+    width:600px;
+    height:125px;
+    display:flex;
+    flex-direction: row;
+}
+
+.match-image{
+    margin-left:10px;
+    height:100px;
+    width:100px;
+    border-radius: 50%;
+    align-self:center;
+    justify-self: center;
+}
+
+.match-name{
+    font-size:34px;
+    font-weight:600;
+    margin-left:50px;
+    align-self:center;
+    justify-self: center;
+}
+
+.match-cards-container{
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.match-percent{
+    height:100px;
+    width:100px;
+    align-self:center;
+    justify-self: right;
+    margin-left:100px;
+    
 }

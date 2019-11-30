@@ -2,7 +2,14 @@ import React, {Component} from 'react';
 import {Table,Modal,
     ModalBody,
     ModalFooter,
-    ModalHeader,Button} from 'reactstrap'
+    ModalHeader,Button,
+    Input,
+    Form,
+    InputGroup,
+    InputGroupText,
+    InputGroupAddon,
+    TabContent, TabPane    
+} from 'reactstrap'
 import Spotify from 'spotify-web-api-js'
 import '../styles/User.css'
 import {
@@ -34,7 +41,9 @@ class User extends Component{
             artistLoaded:true,
             songsLoaded: false,
             modal: false,
-            modalIsOpen: false
+            modalIsOpen: false,
+            instagramUser: '',
+            twitterUser: ''
         }
 
         if(sessionStorage.getItem('access_token') !== null){
@@ -53,16 +62,6 @@ class User extends Component{
 
         })
 
-        // spotifyWebApi.getMyCurrentPlaybackState().then((res)=>{
-        //     this.setState({
-        //         nowPlaying:{
-        //             name: res.item.name,
-        //             image: res.item.album.images[0].url
-        //         }
-        //     })
-        //     console.log(res);
-        // })
-
         //this.loadTable();
         spotifyWebApi.getMyTopTracks().then((res) => {
             this.setState({topTracks:res.items})
@@ -79,6 +78,19 @@ class User extends Component{
     toggleModal(){
         this.setState({
             modalIsOpen: !this.state.modalIsOpen
+        })
+    }
+
+    updateUserInformation = (event) =>{
+        event.preventDefault();
+    }
+
+    onInputChange = (event) => {
+        event.preventDefault();
+        console.log(event.target.name);
+        console.log(event.target.value);
+        this.setState({
+            [event.target.name]: event.target.value
         })
     }
 
@@ -100,13 +112,35 @@ class User extends Component{
                             <Button color="danger" onClick={this.toggleModal.bind(this)}>Update User Info</Button>
                             
                             <Modal isOpen={this.state.modalIsOpen} toggle={this.toggleModal.bind(this)} className="user-modal">
-                                <ModalHeader toggle={this.toggleModal.bind(this)}>Modal title</ModalHeader>
+                                <ModalHeader toggle={this.toggleModal.bind(this)}>Edit User Information</ModalHeader>
                                 <ModalBody>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                <Form onSubmit={this.updateUserInformation}>
+                                    <InputGroup>
+                                        <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>Display Name</InputGroupText>
+                                        </InputGroupAddon>
+                                        <Input name="displayName" placeholder={this.state.displayName} onChange={this.onInputChange}/>
+                                    </InputGroup>
+                                    <br/>
+                                    <InputGroup>
+                                        <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>Instagram Username</InputGroupText>
+                                        </InputGroupAddon>
+                                        <Input name="instagramUser" placeholder={this.state.instagramUser} onChange={this.onInputChange}/>
+                                    </InputGroup>
+                                    <br/>
+                                    <InputGroup>
+                                        <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>Twitter Username</InputGroupText>
+                                        </InputGroupAddon>
+                                        <Input name="twitterUser" placeholder={this.state.twitterUser} onChange={this.onInputChange}/>
+                                    </InputGroup>
+                                </Form>
+
                                 </ModalBody>
                                 <ModalFooter>
-                                <Button color="primary" onClick={this.toggleModal.bind(this)}>Do Something</Button>{' '}
-                                <Button color="secondary" onClick={this.toggleModal.bind(this)}>Cancel</Button>
+                                    <Button color="primary" onClick={this.updateUserInformation.bind(this)}>Update Information</Button>{' '}
+                                    <Button color="secondary" onClick={this.toggleModal.bind(this)}>Cancel</Button>
                                 </ModalFooter>
                             </Modal>
                         </div>
