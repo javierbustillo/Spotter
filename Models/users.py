@@ -54,7 +54,7 @@ class Users(Model):
             users.append(Users(user['user_id'], None, None))
         return users
 
-    def get_user_tracks(self):
+    def get_user_top_tracks(self):
         cursor = self.get_cursor()
         query = 'SELECT * FROM tracks WHERE user_id = %s'
         cursor.execute(query, (self.spotify_id,))
@@ -64,7 +64,7 @@ class Users(Model):
                 Tracks(track_dict['spotify_id'], track_dict['term'], track_dict['pos'], track_dict['user_id']))
         return tracks
 
-    def get_user_artists(self):
+    def get_user_top_artists(self):
         cursor = self.get_cursor()
         query = 'SELECT * FROM artists WHERE user_id = %s'
         cursor.execute(query, (self.spotify_id,))
