@@ -148,8 +148,22 @@ class Match extends Component{
     render(){
         
             const matches = this.state.matchList;
+            console.log(matches)
             const matchList = Object.keys(matches).map(match=>{
                 return(
+                    // <Media>
+                    //     {/* User Image */}
+                    //     <Media left href="#">
+                    //         <Media object data-src="holder.js/64x64" alt="Generic placeholder image" />
+                    //     </Media>
+                    //     {/* Display Name y other info */}
+                    //     <Media body>
+                    //         <Media heading>
+                    //         Media heading
+                    //         </Media>
+                    //         Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                    //     </Media>
+                    // </Media>
                     <tr>
                         <td>
                             <p className="match-display-name">{matches[match].display_name}</p>
