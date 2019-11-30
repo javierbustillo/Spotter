@@ -9,18 +9,19 @@ class SpotifyAPI:
 
     base_url = 'https://api.spotify.com/v1'
     tok = 'BQBqrk82ndU5Oi-a-SmxoT7gkmaVtH0kaIo-Ko18lEhEb4B8IYHYSpV93F1f_7fOqDk2e0YqV0PW-cBllmeYjPiBGSRswZXNnc9e_znhLVrjoLh5apRZHpL0Qw-lOX5En9w3t-zpVtsToXpfP1tybeWKdFm1lKLmkx_V7WJ7qD_vA93VlJF-iDNqwwgqobQ_qSC7V1MVYRFnLPT8Q7peB12bfsvliVBBfimuPLCl1Nt1P-3u'
+
     def request_data(self, url, token=None):
         header = {'Authorization': 'Bearer ' + token} if token else None
         response = requests.get(self.base_url + url, headers=header)
         return json.loads(response.text)
 
-    def get_user(self, access_token):
+    def get_user_info(self, access_token):
         user_info = self.request_data('/me', access_token)
         return user_info
 
-    def get_user_top(self, token, type_of_top=None):
+    def get_user_top_tracks_artists(self, token, type_of_top=None):
         enumerated = enumerate
-        user_id = self.get_user(token)['id']
+        user_id = self.get_user_info(token)['id']
         ranges = ['long_term', 'medium_term', 'short_term']
         users_tops = []
         types = [type_of_top] if type_of_top is not None else ['artists', 'tracks']
@@ -40,15 +41,14 @@ class SpotifyAPI:
                     users_tops.append(top_obj)
         return users_tops
 
-    def get_user_tracks(self, token):
-        return self.get_user_top(token, 'tracks')
+    def get_user_top_tracks(self, token):
+        return self.get_user_top_tracks_artists(token, 'tracks')
 
-    def get_user_artists(self, token):
-        return self.get_user_top(token, 'artists')
+    def get_user_top_artists(self, token):
+        return self.get_user_top_tracks_artists(token, 'artists')
 
     def get_user_by_id(self, token, spotify_id):
         return self.request_data('/users/%s' % spotify_id, token=self.tok)
-
 
     def get_track(self, spotify_id):
         return self.request_data('/tracks/%s' % spotify_id, token=self.tok)
