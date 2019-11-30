@@ -108,18 +108,23 @@ class Users(Model):
         all_common_user_tracks = common_user.get_user_top_tracks()
         all_common_user_artists = common_user.get_user_top_artists()
 
-        common_tracks, common_tracks_position, common_tracks_terms = self.Calculator.count_common(all_user_tracks,
-                                                                                                  all_common_user_tracks)
-        common_artists, common_artists_position, common_artists_term = self.Calculator.count_common(all_user_artists,
-                                                                                                    all_common_user_artists)
+        common_tracks, common_tracks_position, common_tracks_terms = self._count_common(all_user_tracks,
+                                                                                        all_common_user_tracks)
+        common_artists, common_artists_position, common_artists_term = self._count_common(all_user_artists,
+                                                                                          all_common_user_artists)
 
-        denominator_tracks = self.Calculator.calculate_denominator(all_user_tracks, all_common_user_tracks)
-        track_value = self.Calculator.calculate_track_value(common_tracks, common_tracks_position, common_tracks_terms, denominator_tracks)
+        denominator_tracks = max(len(all_user_tracks), len(all_common_user_tracks))
+        track_value = (common_tracks / denominator_tracks) * common_weight + \
+                      (common_tracks_position / denominator_tracks) * common_position_weight + \
+                      (common_tracks_terms / denominator_tracks) * common_terms_weight if denominator_tracks > 0 else 0
 
-        denominator_artists = self.Calculator.calculate_denominator(all_user_artists, all_common_user_artists)
-        artists_value = self.Calculator.calculate_artists_value(common_artists, common_artists_position, common_artists_term, denominator_artists)
+        denominator_artists = max(len(all_user_artists), len(all_common_user_artists))
+        artists_value = (common_artists / denominator_artists) * common_weight + \
+                        (common_artists_position / denominator_artists) * common_position_weight + \
+                        (common_artists_term / denominator_artists) * common_terms_weight \
+            if denominator_artists > 0 else 0
 
-        match_value = self.Calculator.calculate_total_match(track_value, artists_value)
+        match_value = (track_value * track_weight + artists_value * artist_weight) * 100
 
         if self.__is_match(match_value):
             common_user.match_value = match_value
