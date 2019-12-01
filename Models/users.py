@@ -39,6 +39,12 @@ class Users(Model):
         cursor.execute(query, (self.spotify_id, self.access_token, self.tw_profile, self.inst_profile))
         self.commit()
 
+    def get_profile(self):
+        cursor = self.get_cursor()
+        query = 'SELECT tw_profile, inst_profile from users where spotify_id = %s'
+        cursor.execute(query, (self.spotify_id, ))
+        return cursor.fetchall()[0]
+
     def delete_user_tracks_artists(self):
         cursor = self.get_cursor()
         query = 'DELETE FROM tracks WHERE spotify_id = %s'

@@ -25,6 +25,11 @@ class UserHandler(Handler):
         self._add_objs(access_token)
         return jsonify(msg='Created')
 
+    def get_user(self, access_token):
+        spotify_id = self.SpotifyAPI.get_user_info(access_token)['id']
+        user = Users(spotify_id, access_token, None, None)
+        return user.get_profile()
+
     def update_user(self, access_token):
         spotify_id = self.SpotifyAPI.get_user_info(access_token)['id']
         user = Users(spotify_id, access_token, None, None)
