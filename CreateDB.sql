@@ -21,3 +21,8 @@ CREATE TABLE Artists(
     pos INTEGER,
     user_id varchar(500) REFERENCES Users (spotify_id)
     );
+
+
+DROP TABLE IF EXISTS "Users" CASCADE;
+DROP TABLE IF EXISTS "Tracks" CASCADE;
+DROP TABLE IF EXISTS "Artists" CASCADE;

@@ -48,7 +48,7 @@ class SpotifyAPI:
         return self.get_user_top_tracks_artists(token, 'artists')
 
     def get_user_by_id(self, token, spotify_id):
-        return self.request_data('/users/%s' % spotify_id, token=self.tok)
+        return self.request_data('/users/%s' % spotify_id, token=token)
 
     def get_track(self, spotify_id):
         return self.request_data('/tracks/%s' % spotify_id, token=self.tok)
