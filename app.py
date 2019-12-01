@@ -13,9 +13,15 @@ def hello_world():
     return 'Hello World!'
 
 
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['POST', 'PUT'])
 def register():
-    return UserHandler().create_user(request.json)
+    if request.method == 'POST':
+        return UserHandler().create_user(request.json)
+    else:
+        json_dict = request.json
+        access_token = json_dict['access_token']
+        UserHandler().update_user(access_token)
+        return jsonify(msg='Updated user')
 
 
 @app.route('/users/profile', methods=['PUT'])

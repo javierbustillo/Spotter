@@ -7,6 +7,11 @@ from Models.users import Users
 class UserHandler(Handler):
     model = Users
 
+    def _add_objs(self, access_token):
+        tops = self.SpotifyAPI.get_user_top_tracks_artists(access_token)
+        for top in tops:
+            top.create()
+
     def create_user(self, json_dict):
         access_token = json_dict['access_token']
         tw_profile = json_dict['tw_profile']
@@ -17,10 +22,14 @@ class UserHandler(Handler):
             user.create_user()
         except:
             return jsonify(msg='user already exists'), 400
-        tops = self.SpotifyAPI.get_user_top_tracks_artists(access_token)
-        for top in tops:
-            top.create()
+        self._add_objs(access_token)
         return jsonify(msg='Created')
+
+    def update_user(self, access_token):
+        spotify_id = self.SpotifyAPI.get_user_info(access_token)['id']
+        user = Users(spotify_id, access_token, None, None)
+        user.delete_user_tracks_artists()
+        self._add_objs(access_token)
 
     def update_profile(self, access_token, tw_profile, inst_profile):
         spotify_id = self.SpotifyAPI.get_user_info(access_token)['id']
