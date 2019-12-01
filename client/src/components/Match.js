@@ -46,7 +46,10 @@ class Match extends Component{
             isLoading:true,
             modal: false,
             modalIsOpen: false,
-            selectedMatch:''
+            selectedMatch:'',
+            selectedUserName:'',
+            selectedUserImage:'',
+            selectedUserFollowers:''
         }
 
         if(sessionStorage.getItem('access_token') !== null){
@@ -143,7 +146,28 @@ class Match extends Component{
         this.setState({
             modalIsOpen: !this.state.modalIsOpen,
             selectedMatch: e.currentTarget.id
+        },()=>{
+            var url = "https://api.spotify.com/v1/users/" + this.state.selectedMatch
+            console.log(this.state.selectedMatch)
+            axios.get(url, {
+                headers:{
+                    "Authorization": "Bearer " + sessionStorage.getItem("access_token")
+                }
+            })
+                .then((res)=>{
+                    this.setState({
+                        selectedUserName:res.data.display_name,
+                        selectedUserImage:res.data.images[0].url,
+                        selectedUserFollowers:res.data.followers.total
+                    })
+                    console.log(this.state.selectedMatch)
+                })
+                .catch((error)=>  {
+                    console.log("Error: " + error);
+                });
         })
+
+        
     }
 
     renderTables(){
@@ -173,45 +197,14 @@ class Match extends Component{
             const matches = this.state.matchList;
             const matchList = Object.keys(matches).map(match=>{
                 return(
-                    // <Media>
-                    //     {/* User Image */}
-                    //     <Media left href="#">
-                    //         <Media object data-src="holder.js/64x64" alt="Generic placeholder image" />
-                    //     </Media>
-                    //     {/* Display Name y other info */}
-                    //     <Media body>
-                    //         <Media heading>
-                    //         Media heading
-                    //         </Media>
-                    //         Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                    //     </Media>
-                    // </Media>
-                    <tr>
-                        <td>
-                            <p className="match-display-name">{matches[match].display_name}</p>
-                        </td>
-                        <td>
-                            <p className="match-value">{matches[match].match_value.toFixed(2)}</p>
-                        </td>
-                    </tr>
-                )
-            })
-
-
-        return(
-            <div className="main-container">
-                {this.renderUserInfo()}
-
-                <p className="table-header">Match Results</p>
-                <div className="match-cards-container">
-                    <Media id="1" onClick={this.toggleModal.bind(this)} className="match-card">
+                    <Media id={matches[match].spotify_id} onClick={this.toggleModal.bind(this)} className="match-card">
                          {/* User Image */}
                          <Media className="match-image" left href="#">
-                            <img className="match-image"src={this.state.userImage}/>
+                            <img className="match-image"src={matches[match].profile_picture[0].url}/>
                          </Media>
                          {/* Display Name y other info */}
                          <Media className="match-name">
-                             John Smith
+                             {matches[match].display_name}
                          </Media>
                          <Media className="match-percent">
                              <CircularProgressbar  
@@ -224,75 +217,26 @@ class Match extends Component{
                                  value="90" text="90" />
                          </Media>
                      </Media>
-                     <Media id="2" onClick={this.toggleModal.bind(this)} className="match-card">
-                         {/* User Image */}
-                         <Media className="match-image" left href="#">
-                            <img className="match-image"src={this.state.userImage}/>
-                         </Media>
-                         {/* Display Name y other info */}
-                         <Media className="match-name">
-                             John Smith
-                         </Media>
-                         <Media className="match-percent">
-                             <CircularProgressbar  
-                             styles={buildStyles({
-                                pathColor: '#1DB954',
-                                textColor:'#1DB954',
-                                textSize: '30px',
+                    
+                )
+            })
 
-                            })}
-                                 value="85" text="85" />
-                         </Media>
-                     </Media>
-                     <Media className="match-card">
-                         {/* User Image */}
-                         <Media className="match-image" left href="#">
-                            <img className="match-image"src={this.state.userImage}/>
-                         </Media>
-                         {/* Display Name y other info */}
-                         <Media className="match-name">
-                             John Smith
-                         </Media>
-                         <Media className="match-percent">
-                             <CircularProgressbar  
-                             styles={buildStyles({
-                                pathColor: '#1DB954',
-                                textColor:'#1DB954',
-                                textSize: '30px',
 
-                            })}
-                                 value="80" text="80" />
-                         </Media>
-                     </Media>
-                     <Media className="match-card">
-                         {/* User Image */}
-                         <Media className="match-image" left href="#">
-                            <img className="match-image"src={this.state.userImage}/>
-                         </Media>
-                         {/* Display Name y other info */}
-                         <Media className="match-name">
-                             John Smith
-                         </Media>
-                         <Media className="match-percent">
-                             <CircularProgressbar  
-                             styles={buildStyles({
-                                pathColor: '#1DB954',
-                                textColor:'#1DB954',
-                                textSize: '30px',
+        return(
+            <div className="main-container">
+                {this.renderUserInfo()}
 
-                            })}
-                                 value="50" text="50" />
-                         </Media>
-                     </Media>
-
+                <p className="table-header">Match Results</p>
+                <div className="match-cards-container">
 
 
                             <Modal isOpen={this.state.modalIsOpen} toggle={this.toggleModal.bind(this)} className="user-modal">
                                 <ModalHeader toggle={this.toggleModal.bind(this)}>Matched Users Information</ModalHeader>
                                 <ModalBody>
                                     <div className="match-modal-top">
-                                        <img className="match-image"src={this.state.userImage}/>
-                                        <p>DISPLAY NAME</p>
+                                        <img className="match-image"src={this.state.selectedUserImage}/>
+                                        <p>{this.state.selectedUserName}</p>
+                                        <p>Followers: {this.state.selectedUserFollowers}</p>
                                     </div>
                                 </ModalBody>
                                 <ModalFooter>
@@ -303,16 +247,7 @@ class Match extends Component{
 
                     {this.showLoading()}
 
-                    {/* <Table striped id="artistTable">
-                        <thead>
-                            <tr>
-                                <td className="table-head">Top Artists</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {artistList}
-                        </tbody>
-                    </Table> */}
+                    
                 </div>
             </div>
         )
