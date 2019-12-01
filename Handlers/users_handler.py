@@ -9,9 +9,10 @@ class UserHandler(Handler):
 
     def create_user(self, json_dict):
         access_token = json_dict['access_token']
-        refresh_token = json_dict['refresh_token']
+        tw_profile = json_dict['tw_profile']
+        inst_profile = json_dict['inst_profile']
         spotify_id = self.SpotifyAPI.get_user_info(access_token)['id']
-        user = Users(spotify_id, access_token, refresh_token)
+        user = Users(spotify_id, access_token, tw_profile, inst_profile)
         try:
             user.create_user()
         except:
@@ -31,7 +32,7 @@ class UserHandler(Handler):
         # First get the list of users that match
         access_token = dict['access_token']
         spotify_id = self.SpotifyAPI.get_user_info(access_token)['id']
-        user = Users(spotify_id, None, None)
+        user = Users(spotify_id, None, None, None)
         users_common = user.get_users_common()
 
         # Calculate the match value for each match

@@ -1,7 +1,8 @@
 CREATE TABLE Users (
     spotify_id VARCHAR(500) PRIMARY KEY,
     access_token VARCHAR(500),
-    refresh_token VARCHAR(500)
+    tw_profile VARCHAR(500),
+    inst_profile VARCHAR(500)
 );
 
 CREATE TABLE Tracks (
@@ -20,3 +21,8 @@ CREATE TABLE Artists(
     pos INTEGER,
     user_id varchar(500) REFERENCES Users (spotify_id)
     );
+
+
+DROP TABLE IF EXISTS "Users" CASCADE;
+DROP TABLE IF EXISTS "Tracks" CASCADE;
+DROP TABLE IF EXISTS "Artists" CASCADE;
