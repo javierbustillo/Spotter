@@ -32,7 +32,7 @@ class UserHandler(Handler):
         # First get the list of users that match
         access_token = dict['access_token']
         spotify_id = self.SpotifyAPI.get_user_info(access_token)['id']
-        user = Users(spotify_id, None, None)
+        user = Users(spotify_id, None, None, None)
         users_common = user.get_users_common()
 
         # Calculate the match value for each match
