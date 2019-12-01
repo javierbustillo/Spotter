@@ -51,7 +51,7 @@ class Users(Model):
         cursor.execute(query, (self.spotify_id, self.spotify_id, self.spotify_id, self.spotify_id))
         users = []
         for user in cursor.fetchall():
-            users.append(Users(user['user_id'], None, None))
+            users.append(Users(user['user_id'], None, '', ''))
         return users
 
     def get_user_top_tracks(self):
