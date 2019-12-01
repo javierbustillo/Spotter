@@ -18,10 +18,10 @@ import {
     Route,
     Link,
   } from "react-router-dom";
+  const axios = require('axios');
 
 
 const spotifyWebApi = new Spotify();
-
 
 class User extends Component{
     constructor(){
@@ -83,6 +83,18 @@ class User extends Component{
 
     updateUserInformation = (event) =>{
         event.preventDefault();
+        axios.put('https://spotter-flask.herokuapp.com/users/profile', {
+            access_token: sessionStorage.getItem("access_token"),
+            tw_profile: this.state.twitterUser,
+            inst_profile: this.state.instagramUser
+          })
+          .then(function (response) {
+            console.log(response);
+            window.location.reload();
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
     }
 
     onInputChange = (event) => {
