@@ -22,6 +22,11 @@ class UserHandler(Handler):
             top.create()
         return jsonify(msg='Created')
 
+    def update_profile(self, access_token, tw_profile, inst_profile):
+        spotify_id = self.SpotifyAPI.get_user_info(access_token)['id']
+        user = Users(spotify_id, access_token, tw_profile, inst_profile)
+        user.update_profile()
+
     def update_user_tracks_artists(self, json_dict):
         access_token = json_dict['access_token']
         refresh_token = json_dict['refresh_token']

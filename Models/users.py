@@ -39,6 +39,12 @@ class Users(Model):
         cursor.execute(query, (self.spotify_id, self.access_token, self.tw_profile, self.inst_profile))
         self.commit()
 
+    def update_profile(self):
+        cursor = self.get_cursor()
+        query = 'UPDATE users SET tw_profile = %s, inst_profile = %s WHERE spotify_id = %s'
+        cursor.execute(query, (self.tw_profile, self.inst_profile, self.spotify_id))
+        self.commit()
+
     def get_users_common(self):
         cursor = self.get_cursor()
         query = 'WITH user_songs AS (SELECT spotify_id FROM tracks WHERE user_id = %s), ' \
