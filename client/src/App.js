@@ -41,7 +41,9 @@ class App extends Component {
 
       instance.post('https://spotter-flask.herokuapp.com/register', {
         access_token: this.state.access_token,
-        refresh_token: this.state.refresh_token
+        refresh_token: this.state.refresh_token,
+        tw_profile: '',
+        inst_profile:''
       })
       .then(function (response) {
         console.log("Success: " + response.status);

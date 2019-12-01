@@ -1,12 +1,21 @@
 import React, {Component} from 'react';
-import {Table, Media} from 'reactstrap'
+import {Table, Media,Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,Button,
+    Input,
+    Form,
+    InputGroup,
+    InputGroupText,
+    InputGroupAddon,} from 'reactstrap'
 import Spotify from 'spotify-web-api-js'
 import '../styles/Match.css'
 import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
+    Link,
+    
   } from "react-router-dom";
 
   import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
@@ -34,7 +43,10 @@ class Match extends Component{
             matchList:'',
             artistLoaded:true,
             songsLoaded: false,
-            isLoading:true
+            isLoading:true,
+            modal: false,
+            modalIsOpen: false,
+            selectedMatch:''
         }
 
         if(sessionStorage.getItem('access_token') !== null){
@@ -126,6 +138,14 @@ class Match extends Component{
         }
     }
 
+    toggleModal(e){
+        console.log(this.state.selectedMatch)
+        this.setState({
+            modalIsOpen: !this.state.modalIsOpen,
+            selectedMatch: e.currentTarget.id
+        })
+    }
+
     renderTables(){
         if(this.state.topArtists === '' || this.state.topTracks === ''){
             return(
@@ -184,7 +204,7 @@ class Match extends Component{
 
                 <p className="table-header">Match Results</p>
                 <div className="match-cards-container">
-                    <Media className="match-card">
+                    <Media id="1" onClick={this.toggleModal.bind(this)} className="match-card">
                          {/* User Image */}
                          <Media className="match-image" left href="#">
                             <img className="match-image"src={this.state.userImage}/>
@@ -204,7 +224,7 @@ class Match extends Component{
                                  value="90" text="90" />
                          </Media>
                      </Media>
-                     <Media className="match-card">
+                     <Media id="2" onClick={this.toggleModal.bind(this)} className="match-card">
                          {/* User Image */}
                          <Media className="match-image" left href="#">
                             <img className="match-image"src={this.state.userImage}/>
@@ -264,6 +284,21 @@ class Match extends Component{
                                  value="50" text="50" />
                          </Media>
                      </Media>
+
+
+
+                            <Modal isOpen={this.state.modalIsOpen} toggle={this.toggleModal.bind(this)} className="user-modal">
+                                <ModalHeader toggle={this.toggleModal.bind(this)}>Matched Users Information</ModalHeader>
+                                <ModalBody>
+                                    <div className="match-modal-top">
+                                        <img className="match-image"src={this.state.userImage}/>
+                                        <p>DISPLAY NAME</p>
+                                    </div>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button color="secondary" onClick={this.toggleModal.bind(this)}>Close</Button>
+                                </ModalFooter>
+                            </Modal>
                             {matchList}
 
                     {this.showLoading()}
