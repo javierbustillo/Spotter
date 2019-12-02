@@ -147,3 +147,41 @@
      display:flex;
      flex-direction: row;
  }
+
+ .user-music-info-container{
+     margin-top:35px;
+
+ }
+
+ .user-music-card{
+     margin-bottom:20px;
+ }
+
+ .user-card-title{
+     font-size:24px;
+     background-color:#f3f3f3;
+     padding:10px;
+     font-weight:bold;
+     margin-bottom:0px;
+ }
+
+ .card-text-odd{
+     border-bottom-style:solid;
+     border-bottom-width: 2px;
+     border-bottom-color:black;
+     padding-top:15px;
+     margin-bottom:0px;
+     background-color:lightgreen;
+     padding-bottom:15px;
+    font-size:18px;
+ }
+
+ .card-text-even{
+    font-size:18px;
+    border-bottom-style:solid;
+    border-bottom-width: 2px;
+    border-bottom-color:black;
+    padding-top:15px;
+    padding-bottom:15px;
+    margin-bottom:0px;
+}

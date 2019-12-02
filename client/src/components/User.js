@@ -172,19 +172,12 @@ class User extends Component{
                                 <img className="logo" src={twitter} />
                                 <p>{this.state.twitterUser}</p>
                             </div>
-                            <Button color="danger" onClick={this.toggleModal.bind(this)}>Update User Info</Button>
+                            <Button color="success" onClick={this.toggleModal.bind(this)}>Update User Info</Button>
                             
                             <Modal isOpen={this.state.modalIsOpen} toggle={this.toggleModal.bind(this)} className="user-modal">
                                 <ModalHeader toggle={this.toggleModal.bind(this)}>Edit User Information</ModalHeader>
                                 <ModalBody>
                                 <Form onSubmit={this.updateUserInformation}>
-                                    <InputGroup>
-                                        <InputGroupAddon addonType="prepend">
-                                        <InputGroupText>Display Name</InputGroupText>
-                                        </InputGroupAddon>
-                                        <Input name="displayName" placeholder={this.state.displayName} onChange={this.onInputChange}/>
-                                    </InputGroup>
-                                    <br/>
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                         <InputGroupText>Instagram Username</InputGroupText>
@@ -239,48 +232,96 @@ class User extends Component{
         
             const songs = this.state.topTracks;
             const songsList = Object.keys(songs).map(song=>{
-                return(
-                    <CardText>
+                if(song % 2 === 0){
+                    return(
+                        <CardText className="card-text-even">
+                            {songs[song].name}
+                        </CardText>
+                    )
+                }else{
+                    return(
+                    <CardText className="card-text-odd">
                         {songs[song].name}
                     </CardText>
                 )
+                }
+                
             })
 
             const playlists = this.state.playlists;
             const playlistsList = Object.keys(playlists).map(playlist=>{
-                return(
-                    <CardText>
-                        {playlists[playlist].name}
-                    </CardText>
-                )
+                if(playlist % 2 === 0){
+                    return(
+                        <CardText  className="card-text-even">
+                            {playlists[playlist].name}
+                        </CardText>
+                    )
+                }else{
+                    return(
+                        <CardText  className="card-text-odd">
+                            {playlists[playlist].name}
+                        </CardText>
+                    )
+                }
+                
             })
 
             const savedTracks = this.state.savedTracks;
             const savedTracksList = Object.keys(savedTracks).map(track=>{
-                return(
-                    <CardText>
-                        {savedTracks[track].track.name}
-                    </CardText>
-                )
+                if(track < 11 ){
+                    if(track % 2 === 0){
+                        return(
+                            <CardText className="card-text-even">
+                                {savedTracks[track].track.name}
+                            </CardText>
+                        )
+                    }else{
+                        return(
+                            <CardText className="card-text-odd">
+                                {savedTracks[track].track.name}
+                            </CardText>
+                        )
+                    }
+                }
+                
+                
             })
 
             const savedAlbums = this.state.savedAlbums;
             const savedAlbumsList = Object.keys(savedAlbums).map(album=>{
-                return(
-                    <CardText>
-                        {savedAlbums[album].album.name}
-                    </CardText>
-                )
+                if(album % 2 === 0){
+                    return(
+                        <CardText className="card-text-even">
+                            {savedAlbums[album].album.name}
+                        </CardText>
+                    )
+                }else{
+                    return(
+                        <CardText className="card-text-odd">
+                            {savedAlbums[album].album.name}
+                        </CardText>
+                    )
+                }
+                
             })
 
             
             const artists = this.state.topArtists;
             const artistList = Object.keys(artists).map(artist=>{
-                return(
-                    <CardText>
-                        {artists[artist].name}
-                    </CardText>
-                )
+                if(artist % 2 === 0){
+                    return(
+                        <CardText className="card-text-even">
+                            {artists[artist].name}
+                        </CardText>
+                    )
+                }else{
+                    return(
+                        <CardText className="card-text-odd">
+                            {artists[artist].name}
+                        </CardText>
+                    )
+                }
+                
                 
             })
 
@@ -293,51 +334,42 @@ class User extends Component{
                 
                 {this.renderUserInfo()}
 
-                <Container>
+                <Container className="user-music-info-container">
                     <Row>
                         <Col>
-                            <Card>
-                                <CardBody>
-                                <CardTitle>My Playlists</CardTitle>
-                                {playlistsList}
-                                </CardBody>
-                            </Card>
-                        </Col>
-                        <Col>
-                            <Card>
-                                <CardBody>
-                                <CardTitle>My Songs</CardTitle>
-                                {savedTracksList}
-                                </CardBody>
-                            </Card>
-                        </Col>
-                        <Col>
-                            <Card>
-                                <CardBody>
-                                <CardTitle>My Albums</CardTitle>
-                                {savedAlbumsList}
-                                </CardBody>
-                            </Card>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Card>
-                                    <CardBody>
-                                    <CardTitle>My Top Tracks</CardTitle>
+                            <Card className="user-music-card">
+                                    <CardTitle className="user-card-title">My Top Tracks</CardTitle>
                                     {songsList}
-                                    </CardBody>
                             </Card>
                         </Col>
                         <Col>
-                            <Card>
-                                    <CardBody>
-                                    <CardTitle>My Top Artists</CardTitle>
+                            <Card className="user-music-card">
+                                    <CardTitle className="user-card-title">My Top Artists</CardTitle>
                                     {artistList}
-                                    </CardBody>
                             </Card>
                         </Col>
                     </Row>
+                    <Row>
+                        <Col>
+                            <Card className="user-music-card">
+                                <CardTitle className="user-card-title">My Playlists</CardTitle>
+                                {playlistsList}
+                            </Card>
+                        </Col>
+                        <Col>
+                            <Card className="user-music-card">
+                                <CardTitle className="user-card-title">My Songs</CardTitle>
+                                {savedTracksList}
+                            </Card>
+                        </Col>
+                        <Col>
+                            <Card className="user-music-card">
+                                <CardTitle className="user-card-title">My Albums</CardTitle>
+                                {savedAlbumsList}
+                            </Card>
+                        </Col>
+                    </Row>
+                    
                 </Container>
                 {/* <div className="tables-container">
                     <Table striped id="songTable">
