@@ -94,3 +94,23 @@
     display:flex;
     flex-direction:row;
 }
+
+.match-modal-top-left{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    margin-left:20px;
+}
+.match-modal-top-right{
+    display:flex;
+    flex-direction: column;
+    margin-left:auto;
+    margin-right:auto;
+    justify-content: center;
+    align-content: center;
+}
+.match-modal-value{
+    height:75px;
+    width:75px;
+}

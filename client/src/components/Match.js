@@ -193,9 +193,10 @@ class Match extends Component{
     }
 
     render(){
-        
+            var percent;
             const matches = this.state.matchList;
             const matchList = Object.keys(matches).map(match=>{
+                percent = matches[match].match_value.toFixed(2)
                 return(
                     <Media id={matches[match].spotify_id} onClick={this.toggleModal.bind(this)} className="match-card">
                          {/* User Image */}
@@ -214,7 +215,7 @@ class Match extends Component{
                                 textSize: '30px',
 
                             })}
-                                 value="90" text="90" />
+                                 value={percent} text={percent} />
                          </Media>
                      </Media>
                     
@@ -235,8 +236,24 @@ class Match extends Component{
                                 <ModalBody>
                                     <div className="match-modal-top">
                                         <img className="match-image"src={this.state.selectedUserImage}/>
-                                        <p>{this.state.selectedUserName}</p>
-                                        <p>Followers: {this.state.selectedUserFollowers}</p>
+                                        <div className="match-modal-top-left">
+                                            <p>{this.state.selectedUserName}</p>
+                                            <p>Followers: {this.state.selectedUserFollowers}</p>
+                                        </div>
+                                        <div className="match-modal-top-right">
+                                            <div className="match-modal-value">
+                                                <CircularProgressbar  
+                                                styles={buildStyles({
+                                                    pathColor: '#1DB954',
+                                                    textColor:'#1DB954',
+                                                    textSize: '30px',
+
+                                                })}
+                                                    value={percent} text={percent} />
+                                            </div>
+                                            
+                                        </div>
+                                        
                                     </div>
                                 </ModalBody>
                                 <ModalFooter>

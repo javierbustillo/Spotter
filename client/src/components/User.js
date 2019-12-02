@@ -8,7 +8,10 @@ import {Table,Modal,
     InputGroup,
     InputGroupText,
     InputGroupAddon,
-    TabContent, TabPane    
+    TabContent, TabPane   ,
+    Container,Row,Col,
+    Card,CardTitle,
+    CardBody,CardText
 } from 'reactstrap'
 import Spotify from 'spotify-web-api-js'
 import '../styles/User.css'
@@ -18,6 +21,10 @@ import {
     Route,
     Link,
   } from "react-router-dom";
+
+  import instagram from '../instagram-logo.png';
+  import twitter from '../twitter-logo.png';
+
   const axios = require('axios');
 
 
@@ -38,6 +45,9 @@ class User extends Component{
             },
             topTracks:'',
             topArtists:'',
+            playlists:'',
+            savedTracks:'',
+            savedAlbums:'',
             artistLoaded:true,
             songsLoaded: false,
             modal: false,
@@ -49,6 +59,27 @@ class User extends Component{
         if(sessionStorage.getItem('access_token') !== null){
             spotifyWebApi.setAccessToken(this.state.access_token);
         }
+
+        const instance = axios.create({
+            timeout: 36000,
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+         
+        instance.post('https://spotter-flask.herokuapp.com/users/profile', {
+            access_token: this.state.access_token,
+        })
+        .then((res)=>{
+            this.setState({
+                instagramUser:res.data.inst_profile,
+                twitterUser:res.data.tw_profile
+            })
+            console.log(res.data);
+        })
+        .catch((error)=>  {
+            console.log("Error: " + error);
+        });
     }
 
     componentWillMount(){
@@ -72,6 +103,19 @@ class User extends Component{
             this.setState({topArtists:res.items})
         })
 
+        spotifyWebApi.getUserPlaylists().then((res)=>{
+            this.setState({playlists:res.items})
+        })
+
+        spotifyWebApi.getMySavedTracks().then((res)=>{
+            console.log(res)
+            this.setState({savedTracks:res.items})
+        })
+
+        spotifyWebApi.getMySavedAlbums().then((res)=>{
+            console.log(res)
+            this.setState({savedAlbums:res.items})
+        })
 
     }
 
@@ -95,6 +139,7 @@ class User extends Component{
           .catch(function (error) {
             console.log(error);
           });
+
     }
 
     onInputChange = (event) => {
@@ -121,6 +166,12 @@ class User extends Component{
                         <div className="user-name-container">
                             <p className="user-displayName">{this.state.displayName}</p>
                             <p className="user-email">{this.state.userEmail}</p>
+                            <div className="social-media">
+                                <img className="logo" src={instagram}></img>
+                                <p>{this.state.instagramUser}</p>
+                                <img className="logo" src={twitter} />
+                                <p>{this.state.twitterUser}</p>
+                            </div>
                             <Button color="danger" onClick={this.toggleModal.bind(this)}>Update User Info</Button>
                             
                             <Modal isOpen={this.state.modalIsOpen} toggle={this.toggleModal.bind(this)} className="user-modal">
@@ -173,7 +224,7 @@ class User extends Component{
     }
 
     renderTables(){
-        if(this.state.topArtists === '' || this.state.topTracks === ''){
+        if(this.state.topArtists === '' || this.state.topTracks === '' || this.state.playlists){
             return(
                 <div>
                     <p className="empty-info-text">Login to View your Information</p>
@@ -189,11 +240,36 @@ class User extends Component{
             const songs = this.state.topTracks;
             const songsList = Object.keys(songs).map(song=>{
                 return(
-                    <tr>
-                        <td>
-                            {songs[song].name}
-                        </td>
-                    </tr>
+                    <CardText>
+                        {songs[song].name}
+                    </CardText>
+                )
+            })
+
+            const playlists = this.state.playlists;
+            const playlistsList = Object.keys(playlists).map(playlist=>{
+                return(
+                    <CardText>
+                        {playlists[playlist].name}
+                    </CardText>
+                )
+            })
+
+            const savedTracks = this.state.savedTracks;
+            const savedTracksList = Object.keys(savedTracks).map(track=>{
+                return(
+                    <CardText>
+                        {savedTracks[track].track.name}
+                    </CardText>
+                )
+            })
+
+            const savedAlbums = this.state.savedAlbums;
+            const savedAlbumsList = Object.keys(savedAlbums).map(album=>{
+                return(
+                    <CardText>
+                        {savedAlbums[album].album.name}
+                    </CardText>
                 )
             })
 
@@ -201,11 +277,9 @@ class User extends Component{
             const artists = this.state.topArtists;
             const artistList = Object.keys(artists).map(artist=>{
                 return(
-                    <tr>
-                        <td>
-                            {artists[artist].name}
-                        </td>
-                    </tr>
+                    <CardText>
+                        {artists[artist].name}
+                    </CardText>
                 )
                 
             })
@@ -214,12 +288,58 @@ class User extends Component{
 
 
         return(
-            <div class="main-container">
+            <div className="main-container">
                 
                 
                 {this.renderUserInfo()}
 
-                <div className="tables-container">
+                <Container>
+                    <Row>
+                        <Col>
+                            <Card>
+                                <CardBody>
+                                <CardTitle>My Playlists</CardTitle>
+                                {playlistsList}
+                                </CardBody>
+                            </Card>
+                        </Col>
+                        <Col>
+                            <Card>
+                                <CardBody>
+                                <CardTitle>My Songs</CardTitle>
+                                {savedTracksList}
+                                </CardBody>
+                            </Card>
+                        </Col>
+                        <Col>
+                            <Card>
+                                <CardBody>
+                                <CardTitle>My Albums</CardTitle>
+                                {savedAlbumsList}
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Card>
+                                    <CardBody>
+                                    <CardTitle>My Top Tracks</CardTitle>
+                                    {songsList}
+                                    </CardBody>
+                            </Card>
+                        </Col>
+                        <Col>
+                            <Card>
+                                    <CardBody>
+                                    <CardTitle>My Top Artists</CardTitle>
+                                    {artistList}
+                                    </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Container>
+                {/* <div className="tables-container">
                     <Table striped id="songTable">
                         <thead>
                             <tr>
@@ -240,7 +360,7 @@ class User extends Component{
                             {artistList}
                         </tbody>
                     </Table>
-                </div>
+                </div> */}
             </div>
         )
     }
