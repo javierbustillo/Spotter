@@ -113,4 +113,80 @@
 .match-modal-value{
     height:75px;
     width:75px;
+} 
+
+.logo{
+    height:30px;
+    width:30px;
+    border-radius:50%;
+    margin-right:10px;
+    margin-left:10px;
+}
+
+.social-media{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom:15px;
+}
+
+.follow-button{
+    width:125px;
+    height:35px;
+}
+
+.match-username{
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:0px;
+
+}
+
+.match-followers{
+    font-size:16px;
+    margin-bottom:5px;
+}
+
+.social-media-title{
+    font-size:20px;
+    text-align: center;
+    margin-top:15px;
+    margin-bottom:0px;
+    font-weight:bold;
+}
+
+.match-music-card{
+    margin-left:10px;
+}
+
+.match-card-title{
+    font-size:24px;
+    background-color:#f3f3f3;
+    padding:10px;
+    font-weight:bold;
+    margin-bottom:0px;
+}
+
+.card-text-odd{
+    border-bottom-style:solid;
+    border-bottom-width: 2px;
+    border-bottom-color:black;
+    padding-top:15px;
+    margin-bottom:0px;
+    background-color:lightgreen;
+    padding-bottom:15px;
+   font-size:18px;
+   padding-left:20px;
+}
+
+.card-text-even{
+   font-size:18px;
+   border-bottom-style:solid;
+   border-bottom-width: 2px;
+   border-bottom-color:black;
+   padding-top:15px;
+   padding-bottom:15px;
+   margin-bottom:0px;   
+   padding-left:20px;
+
 }
