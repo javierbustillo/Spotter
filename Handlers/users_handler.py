@@ -45,10 +45,9 @@ class UserHandler(Handler):
 
         matches = []
         for common_user in users_common:
-
             match_value = user.calculate_match(common_user)
-
             if match_value > 0:
+                common_user.match_value = match_value
                 matches.append(common_user)
                 common_user.overlap_tracks = user.overlap_tracks(common_user)
                 common_user.overlap_artists = user.overlap_artists(common_user)
