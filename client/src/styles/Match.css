@@ -1,3 +1,7 @@
+.main-container{
+    background-color: #191414;
+}
+
 .table-head{
     font-size:24px;
     font-weight:500;
@@ -5,15 +9,12 @@
     
 }
 
-.match_image{
-    height:150px;
-    width:150px;
-}
+
 
 .table-header{
     color:#1DB954;
     font-size:38px;
-    weight:700;
+    font-weight:700;
 }
 
 .table-container{
@@ -40,4 +41,152 @@
     font-size:18px;
     font-weight:700;
     justify-self: center;
+}
+
+.match-card{
+    color:white;
+    border-radius: 10px;
+    margin-left:50px;
+    margin-right:50px;
+    margin-bottom:50px;
+    background-color:#3b3a3a;
+    width:600px;
+    height:125px;
+    display:flex;
+    flex-direction: row;
+}
+
+.match-image{
+    margin-left:10px;
+    height:100px;
+    width:100px;
+    border-radius: 50%;
+    align-self:center;
+    justify-self: center;
+}
+
+.match-name{
+    font-size:34px;
+    font-weight:600;
+    margin-left:50px;
+    align-self:center;
+    justify-self: center;
+}
+
+.match-cards-container{
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.match-percent{
+    height:100px;
+    width:100px;
+    align-self:center;
+    justify-self: right;
+    margin-left:100px;
+    margin-right:20px;
+    
+}
+
+.match-modal-top{
+    display:flex;
+    flex-direction:row;
+}
+
+.match-modal-top-left{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    margin-left:20px;
+}
+.match-modal-top-right{
+    display:flex;
+    flex-direction: column;
+    margin-left:auto;
+    margin-right:auto;
+    justify-content: center;
+    align-content: center;
+}
+.match-modal-value{
+    height:75px;
+    width:75px;
+} 
+
+.logo{
+    height:30px;
+    width:30px;
+    border-radius:50%;
+    margin-right:10px;
+    margin-left:10px;
+}
+
+.social-media{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom:15px;
+}
+
+.follow-button{
+    width:125px;
+    height:35px;
+}
+
+.match-username{
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:0px;
+
+}
+
+.match-followers{
+    font-size:16px;
+    margin-bottom:5px;
+}
+
+.social-media-title{
+    font-size:20px;
+    text-align: center;
+    margin-top:15px;
+    margin-bottom:0px;
+    font-weight:bold;
+}
+
+.match-music-card{
+    margin-left:10px;
+}
+
+.match-card-title{
+    font-size:24px;
+    background-color:#f3f3f3;
+    padding:10px;
+    font-weight:bold;
+    margin-bottom:0px;
+}
+
+.card-text-odd{
+    border-bottom-style:solid;
+    border-bottom-width: 2px;
+    border-bottom-color:black;
+    padding-top:15px;
+    margin-bottom:0px;
+    background-color:lightgreen;
+    padding-bottom:15px;
+   font-size:18px;
+   padding-left:20px;
+}
+
+.card-text-even{
+   font-size:18px;
+   border-bottom-style:solid;
+   border-bottom-width: 2px;
+   border-bottom-color:black;
+   padding-top:15px;
+   padding-bottom:15px;
+   margin-bottom:0px;   
+   padding-left:20px;
+
 }

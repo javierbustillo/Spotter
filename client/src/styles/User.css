@@ -1,7 +1,11 @@
+.main-container{
+    background-color: #191414;
+}
 .user-info{
     display:flex;
     flex-direction:row;
     padding-top:90px;
+    color:white;
 }
 
 .user-displayName{
@@ -47,16 +51,40 @@
 }
 
 .table-head{
-    font-size:24px;
+    font-size:28px;
     font-weight:500;
+    color:white;
+
 }
 
 #songTable.table-striped>tbody>tr:nth-of-type(odd){
-    background-color:rgba(15, 221, 87, 0.24);
+    font-weight:500;
+    font-size:20px;
+    background-color:#1DB954;
+    color:white;
+
  }
 
  #artistTable.table-striped>tbody>tr:nth-of-type(odd){
-    background-color:rgba(15, 221, 87, 0.24);
+    font-weight:500;
+    font-size:20px;
+    background-color:#1DB954;
+    color:white;
+
+ }
+
+ #songTable.table-striped>tbody>tr:nth-of-type(even){
+    font-weight:500;
+    font-size:20px;
+    color:white;
+
+ }
+
+ #artistTable.table-striped>tbody>tr:nth-of-type(even){
+    font-weight:500;
+    font-size:20px;
+    color:white;
+
  }
 
  .song-name{
@@ -88,7 +116,6 @@
     justify-content: center;
     align-content: center;
     margin-top:25vh;
-
  }
 
  .match-button{
@@ -107,3 +134,54 @@
      text-decoration: none;
      background-color:rgb(22, 163, 71);
  }
+
+ .logo{
+     height:30px;
+     width:30px;
+     border-radius:50%;
+     margin-right:10px;
+     margin-left:10px;
+ }
+
+ .social-media{
+     display:flex;
+     flex-direction: row;
+ }
+
+ .user-music-info-container{
+     margin-top:35px;
+
+ }
+
+ .user-music-card{
+     margin-bottom:20px;
+ }
+
+ .user-card-title{
+     font-size:24px;
+     background-color:#f3f3f3;
+     padding:10px;
+     font-weight:bold;
+     margin-bottom:0px;
+ }
+
+ .card-text-odd{
+     border-bottom-style:solid;
+     border-bottom-width: 2px;
+     border-bottom-color:black;
+     padding-top:15px;
+     margin-bottom:0px;
+     background-color:lightgreen;
+     padding-bottom:15px;
+    font-size:18px;
+ }
+
+ .card-text-even{
+    font-size:18px;
+    border-bottom-style:solid;
+    border-bottom-width: 2px;
+    border-bottom-color:black;
+    padding-top:15px;
+    padding-bottom:15px;
+    margin-bottom:0px;
+}

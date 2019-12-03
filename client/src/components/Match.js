@@ -1,13 +1,24 @@
 import React, {Component} from 'react';
-import {Table} from 'reactstrap'
+import {Table, Media,Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,Button,
+    Card,CardText,CardTitle} from 'reactstrap'
 import Spotify from 'spotify-web-api-js'
 import '../styles/Match.css'
 import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
+    Link,
+    NavLink
+    
   } from "react-router-dom";
+  import instagram from '../instagram-logo.png';
+  import twitter from '../twitter-logo.png';
+
+  import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 
 const spotifyWebApi = new Spotify();
@@ -31,7 +42,14 @@ class Match extends Component{
             matchList:'',
             artistLoaded:true,
             songsLoaded: false,
-            isLoading:true
+            isLoading:true,
+            modal: false,
+            modalIsOpen: false,
+            selectedMatch:'',
+            selectedUserName:'',
+            selectedUserImage:'',
+            selectedUserFollowers:'',
+            selectedUserPlaylists:''
         }
 
         if(sessionStorage.getItem('access_token') !== null){
@@ -70,27 +88,7 @@ class Match extends Component{
 
         })
 
-        //post to /users/match => access_token
-
-        // spotifyWebApi.getMyCurrentPlaybackState().then((res)=>{
-        //     this.setState({
-        //         nowPlaying:{
-        //             name: res.item.name,
-        //             image: res.item.album.images[0].url
-        //         }
-        //     })
-        //     console.log(res);
-        // })
-
-        //this.loadTable();
-        // spotifyWebApi.getMyTopTracks().then((res) => {
-        //     this.setState({topTracks:res.items})
-        //     //console.log(this.state.topTracks)
-        // })
-
-        // spotifyWebApi.getMyTopArtists().then((res) => {
-        //     this.setState({topArtists:res.items})
-        // })
+        
 
 
     }
@@ -123,6 +121,39 @@ class Match extends Component{
         }
     }
 
+    toggleModal(e){
+        this.setState({
+            modalIsOpen: !this.state.modalIsOpen,
+            selectedMatch: e.currentTarget.id
+        },()=>{
+            var url = "https://api.spotify.com/v1/users/" + this.state.selectedMatch
+            axios.get(url, {
+                headers:{
+                    "Authorization": "Bearer " + sessionStorage.getItem("access_token")
+                }
+            }).then((res)=>{
+                    console.log(res)
+                    this.setState({
+                        selectedUserName:res.data.display_name,
+                        selectedUserImage:res.data.images[0].url,
+                        selectedUserFollowers:res.data.followers.total
+                    })
+                    console.log(this.state.selectedMatch)
+                })
+                .catch((error)=>  {
+                    console.log("Error: " + error);
+                });
+                
+                
+        })
+
+        spotifyWebApi.getUserPlaylists().then((res)=>{
+            this.setState({selectedUserPlaylists:res.items})
+        })
+
+            
+        }
+
     renderTables(){
         if(this.state.topArtists === '' || this.state.topTracks === ''){
             return(
@@ -145,55 +176,121 @@ class Match extends Component{
         }
     }
 
+    follow = (event) =>{
+        event.preventDefault();
+        // spotifyWebApi.followUsers(this.state.selectedMatch.toString()).then((res)=>{
+        //     console.log("Now following: "+this.state.selectedMatch);
+        // })
+        console.log(this.state.selectedMatch)
+    }
+
     render(){
-        
+            var percent;
             const matches = this.state.matchList;
             const matchList = Object.keys(matches).map(match=>{
+                percent = matches[match].match_value.toFixed(2)
+                
                 return(
-                    <tr>
-                        <td>
-                            <p className="match-display-name">{matches[match].display_name}</p>
-                        </td>
-                        <td>
-                            <p className="match-value">{matches[match].match_value.toFixed(2)}</p>
-                        </td>
-                    </tr>
+                    <Media id={matches[match].spotify_id} onClick={this.toggleModal.bind(this)} className="match-card">
+                         {/* User Image */}
+                         <Media className="match-image" left href="#">
+                            <img className="match-image"src={matches[match].profile_picture[0].url}/>
+                         </Media>
+                         {/* Display Name y other info */}
+                         <Media className="match-name">
+                             {matches[match].display_name}
+                         </Media>
+                         <Media className="match-percent">
+                             <CircularProgressbar  
+                             styles={buildStyles({
+                                pathColor: '#1DB954',
+                                textColor:'#1DB954',
+                                textSize: '30px',
+
+                            })}
+                                 value={percent} text={percent} />
+                         </Media>
+                     </Media>
+                    
                 )
+            })
+
+            const playlists = this.state.selectedUserPlaylists;
+            const playlistsList = Object.keys(playlists).map(playlist=>{
+                if(playlist % 2 === 0){
+                    return(
+                        <a href={playlists[playlist].external_urls.spotify} target="_blank" className="card-text-even">
+                            {playlists[playlist].name}
+                        </a>
+                    )
+                }else{
+                    return(
+                        <a href={playlists[playlist].external_urls.spotify} target="_blank" className="card-text-odd">
+                            {playlists[playlist].name}
+                        </a>
+                    )
+                }
+                
             })
 
 
         return(
-            <div>
+            <div className="main-container">
                 {this.renderUserInfo()}
 
                 <p className="table-header">Match Results</p>
-                <div className="table-container">
-                    <Table striped id="songTable">
-                        <thead>
-                            <tr>
-                                <td className="table-head">Display Name</td>
-                                <td className="table-head">Match Value</td>
-                            </tr>
-                        </thead>
-                        
-                        <tbody>
+                <div className="match-cards-container">
 
+
+                            <Modal isOpen={this.state.modalIsOpen} toggle={this.toggleModal.bind(this)} className="user-modal">
+                                <ModalHeader toggle={this.toggleModal.bind(this)}>Matched Users Information</ModalHeader>
+                                <ModalBody>
+                                    <div className="match-modal-top">
+                                        <img className="match-image"src={this.state.selectedUserImage}/>
+                                        <div className="match-modal-top-left">
+                                            <p className="match-username">{this.state.selectedUserName}</p>
+                                            <p className="match-followers">Followers: {this.state.selectedUserFollowers}</p>
+                                            <Button color="success" className="follow-button" onClick={this.follow.bind(this)}>Follow</Button>
+                                        </div>
+                                        <div className="match-modal-top-right">
+                                            <div className="match-modal-value">
+                                                <CircularProgressbar  
+                                                styles={buildStyles({
+                                                    pathColor: '#1DB954',
+                                                    textColor:'#1DB954',
+                                                    textSize: '30px',
+
+                                                })}
+                                                    value={percent} text={percent} />
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    <p className="social-media-title">Follow Them On Social Media:</p>
+                                    <div className="social-media">
+                                            <img className="logo" src={instagram}></img>
+                                            <a href="https://www.instagram.com/gaby_rosario4" target="_blank">sample_instagram</a>
+                                            <img className="logo" src={twitter} />
+                                            <a href="https://www.twitter.com/grosario4" target="_blank">sample_twitter</a>
+                                    </div>
+
+                                    <Card className="match-music-card">
+                                        <CardTitle className="match-card-title">My Playlists</CardTitle>
+                                        {playlistsList}
+                                    </Card>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button color="success" className="follow-button" onClick={this.follow.bind(this)}>Follow</Button>
+                                    <Button color="secondary" onClick={this.toggleModal.bind(this)}>Close</Button>
+                                </ModalFooter>
+                            </Modal>
                             {matchList}
-                        </tbody>
-                    </Table>
 
                     {this.showLoading()}
 
-                    {/* <Table striped id="artistTable">
-                        <thead>
-                            <tr>
-                                <td className="table-head">Top Artists</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {artistList}
-                        </tbody>
-                    </Table> */}
+                    
                 </div>
             </div>
         )
