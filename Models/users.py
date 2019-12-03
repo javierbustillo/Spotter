@@ -12,7 +12,7 @@ class MatchCalculator:
     def calculate_denominator(self, x, y):
         return 0
 
-    def calculate_track_value(self,x,y,z,w):
+    def calculate_track_value(self, x, y, z, w):
         return 0
 
     def calculate_artists_value(self, x, y, z, w):
@@ -42,15 +42,15 @@ class Users(Model):
     def get_profile(self):
         cursor = self.get_cursor()
         query = 'SELECT tw_profile, inst_profile from users where spotify_id = %s'
-        cursor.execute(query, (self.spotify_id, ))
+        cursor.execute(query, (self.spotify_id,))
         return cursor.fetchall()[0]
 
     def delete_user_tracks_artists(self):
         cursor = self.get_cursor()
-        query = 'DELETE FROM tracks WHERE spotify_id = %s'
-        cursor.execute(query, (self.spotify_id, ))
-        query = 'DELETE FROM artists WHERE spotify_id = %s'
-        cursor.execute(query, (self.spotify_id, ))
+        query = 'DELETE FROM tracks WHERE user_id = %s'
+        cursor.execute(query, (self.spotify_id,))
+        query = 'DELETE FROM artists WHERE user_id = %s'
+        cursor.execute(query, (self.spotify_id,))
         self.commit()
 
     def update_profile(self):
@@ -99,25 +99,42 @@ class Users(Model):
         common_obj_count = 0
         common_positions = 0
         common_terms = 0
-        for obj in user_objs:
-            if obj in common_objs:
-                common_obj_count += 1
-                for common_obj in common_objs:
-                    if common_obj == obj:
-                        # if type(common_obj) == Tracks:
-                        #     print('\n\n')
-                        #     print(SpotifyAPI().get_track(common_obj.spotify_id)['name'])
-                        #     print('\n\n')
-                        #
-                        # else:
-                        #     print('\n\n')
-                        #     print(SpotifyAPI().get_artist(common_obj.spotify_id)['name'])
-                        #     print('\n\n')
-                        if common_obj.pos == obj.pos:
-                            common_positions += 1
-                        if common_obj.term == obj.term:
+        index = 0
+        copy_user_objs = user_objs.copy()
+        copy_common_objs = common_objs.copy()
+        overlap_objs = []
+
+        while index < len(copy_user_objs):
+            if index < len(copy_user_objs) - 1:
+                chosen_obj = copy_user_objs.pop(index)
+                similar_objs = [chosen_obj]
+                index -= 1
+            j = index
+            while j < len(copy_user_objs):
+                if chosen_obj == copy_user_objs[j]:
+                    similar_objs.append(copy_user_objs.pop(j))
+                    j -= 1
+                j += 1
+
+            j = 0
+            chosen_common_objs = []
+            while j < len(copy_common_objs):
+                if chosen_obj == copy_common_objs[j]:
+                    chosen_common_objs.append(copy_common_objs.pop(j))
+                    j -= 1
+                j += 1
+            if len(chosen_common_objs) > 0:
+                overlap_objs.append(similar_objs[0].spotify_id)
+                common_obj_count += min(len(similar_objs), len(chosen_common_objs))
+                for obj in similar_objs:
+                    for common_obj in chosen_common_objs:
+                        if obj.term == common_obj.term:
                             common_terms += 1
-        return common_obj_count, common_positions, common_terms
+                        if obj.pos == common_obj.pos:
+                            common_positions += 1
+            index += 1
+
+        return common_obj_count, common_positions, common_terms, overlap_objs
 
     # TODO: Refactor _count_common into three different methods
     def calculate_match(self, common_user, common_weight=0.8, common_terms_weight=0.1, common_position_weight=0.1,
@@ -128,10 +145,8 @@ class Users(Model):
         all_common_user_tracks = common_user.get_user_top_tracks()
         all_common_user_artists = common_user.get_user_top_artists()
 
-        common_tracks, common_tracks_position, common_tracks_terms = self._count_common(all_user_tracks,
-                                                                                        all_common_user_tracks)
-        common_artists, common_artists_position, common_artists_term = self._count_common(all_user_artists,
-                                                                                          all_common_user_artists)
+        common_tracks, common_tracks_position, common_tracks_terms, overlap_tracks = self._count_common(all_user_tracks, all_common_user_tracks)
+        common_artists, common_artists_position, common_artists_term, overlap_artists = self._count_common(all_user_artists, all_common_user_artists)
 
         denominator_tracks = max(len(all_user_tracks), len(all_common_user_tracks))
         track_value = (common_tracks / denominator_tracks) * common_weight + \
@@ -146,10 +161,21 @@ class Users(Model):
 
         match_value = (track_value * track_weight + artists_value * artist_weight) * 100
 
-        if self.__is_match(match_value):
-            common_user.match_value = match_value
-        else:
-            common_user.match_value = 0
+        return match_value if self.__is_match(match_value) else 0
+
+    def overlap_tracks(self, common_user):
+        return self.__overlap_objs(self.get_user_top_tracks(), common_user.get_user_top_tracks())
+
+    def overlap_artists(self, common_user):
+        return self.__overlap_objs(self.get_user_top_artists(), common_user.get_user_top_artists())
+
+    def __overlap_objs(self, objs, common_objs):
+        overlap_objs = []
+        for obj in objs:
+            if obj in common_objs:
+                if obj.spotify_id not in overlap_objs:
+                    overlap_objs.append(obj.spotify_id)
+        return overlap_objs
 
     def __is_match(self, value):
         return value > self.threshold

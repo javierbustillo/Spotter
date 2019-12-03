@@ -57,9 +57,10 @@ class UserHandler(Handler):
         # Calculate the match value for each match
         matches = []
         for common_user in users_common:
-            # TODO: Updated the return of calculate_match
-            user.calculate_match(common_user)
-            if common_user.match_value > 0:
+            match_value = user.calculate_match(common_user)
+            if match_value > 0:
+                common_user.overlap_tracks = user.overlap_tracks(common_user)
+                common_user.overlap_artists = user.overlap_artists(common_user)
                 matches.append(common_user)
 
         matches.sort(key=lambda x: x.match_value, reverse=True)
