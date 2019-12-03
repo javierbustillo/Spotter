@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 from Handlers.users_handler import UserHandler
+from SpotifyAPI import SpotifyAPI
 
 app = Flask(__name__)
 
@@ -15,11 +16,13 @@ def hello_world():
 
 @app.route('/register', methods=['POST', 'PUT'])
 def register():
+    access_token = request.json['access_token']
     if request.method == 'POST':
-        return UserHandler().create_user(request.json)
+        tw_profile = request.json['tw_profile']
+        inst_profile = request.json['inst_profile']
+        UserHandler().create_user(access_token, tw_profile, inst_profile)
+        return jsonify(msg='Created user')
     else:
-        json_dict = request.json
-        access_token = json_dict['access_token']
         UserHandler().update_user(access_token)
         return jsonify(msg='Updated user')
 
@@ -39,9 +42,21 @@ def update_user():
         user_profile = UserHandler().get_user(access_token)
         return jsonify(user_profile)
 
+
 @app.route('/users/match', methods=['POST'])
-def match():
-    return UserHandler().get_matches(request.json)
+def match_list():
+    access_token = request.json['access_token']
+    matches = UserHandler().get_matches(access_token)
+    dict_match = []
+    for match in matches:
+        match_dict = match.__dict__
+        match_dict.pop('conn')
+        match_dict.pop('URL')
+        user_info = SpotifyAPI().get_user_by_id(access_token, match.spotify_id)
+        match_dict['display_name'] = user_info['display_name']
+        match_dict['profile_picture'] = user_info['images']
+        dict_match.append(match_dict)
+    return jsonify(dict_match)
 
 
 if __name__ == '__main__':

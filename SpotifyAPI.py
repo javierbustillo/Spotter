@@ -8,7 +8,7 @@ from Models.tracks import Tracks
 class SpotifyAPI:
 
     base_url = 'https://api.spotify.com/v1'
-    tok = 'BQBqrk82ndU5Oi-a-SmxoT7gkmaVtH0kaIo-Ko18lEhEb4B8IYHYSpV93F1f_7fOqDk2e0YqV0PW-cBllmeYjPiBGSRswZXNnc9e_znhLVrjoLh5apRZHpL0Qw-lOX5En9w3t-zpVtsToXpfP1tybeWKdFm1lKLmkx_V7WJ7qD_vA93VlJF-iDNqwwgqobQ_qSC7V1MVYRFnLPT8Q7peB12bfsvliVBBfimuPLCl1Nt1P-3u'
+    tok = 'BQAH5zsJqOdb_xFk0j7LFs1FI50Tu4s_Lp9--28jdrCe2WfYkNQwJ4ywqsbQkob_P0jRUxy3CB1lRcaVM7YliTbQoI6KR-WozHcxQmRAJpijepKl1U0eA3nY9EXy8QFyKKhh1g3u0mJhcKD9wEQj3p3JEo7KsmPI4kXcdhylsbX5uBlljVzEAuetAqGs7crn4ZsuEn1V5I0HRVtVRq107oemN9iBR8sgu8Hb-OxLgmdLeQ'
 
     def request_data(self, url, token=None):
         header = {'Authorization': 'Bearer ' + token} if token else None
