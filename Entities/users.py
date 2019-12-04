@@ -36,7 +36,6 @@ class MatchCalculator:
             if index < len(copy_user_objs) - 1:
                 chosen_obj = copy_user_objs.pop(index)
                 similar_objs = [chosen_obj]
-                index -= 1
             j = index
             while j < len(copy_user_objs):
                 if chosen_obj == copy_user_objs[j]:
@@ -94,7 +93,7 @@ class Users(Entity):
             return cursor.fetchall()[0]
         except IndexError:
             return {'tw_profile': '', 'inst_profile': ''}
-        
+
     def delete_user_tracks_artists(self):
         cursor = self.get_cursor()
         query = 'DELETE FROM tracks WHERE user_id = %s'
