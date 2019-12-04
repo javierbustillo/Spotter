@@ -32,10 +32,9 @@ class MatchCalculator:
         copy_user_objs = user_objs.copy()
         copy_common_objs = common_objs.copy()
 
-        while index < len(copy_user_objs):
-            if index < len(copy_user_objs) - 1:
-                chosen_obj = copy_user_objs.pop(index)
-                similar_objs = [chosen_obj]
+        while len(copy_user_objs) > 0:
+            chosen_obj = copy_user_objs.pop(index)
+            similar_objs = [chosen_obj]
             j = index
             while j < len(copy_user_objs):
                 if chosen_obj == copy_user_objs[j]:
@@ -58,7 +57,6 @@ class MatchCalculator:
                             common_terms += 1
                         if obj.pos == common_obj.pos:
                             common_positions += 1
-            index += 1
 
         return common_obj_count, common_positions, common_terms
 
