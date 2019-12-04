@@ -1,14 +1,15 @@
-from Models.entity import Entity
+from Entities.entity import Entity
 
 
-class Artists(Entity):
+class Tracks(Entity):
+
     spotify_id = None
     term = None
     pos = None
     user_id = None
 
     def __init__(self, spotify_id, term, pos, user_id):
-        super(Artists, self).__init__()
+        super(Tracks, self).__init__()
         self.spotify_id = spotify_id
         self.term = term
         self.pos = pos
@@ -16,13 +17,13 @@ class Artists(Entity):
 
     def create(self):
         cursor = self.get_cursor()
-        query = 'INSERT INTO Artists (spotify_id, term, pos, user_id) values (%s,%s,%s,%s) returning aid'
+        query = 'INSERT INTO Tracks (spotify_id, term, pos, user_id) values (%s,%s,%s,%s)'
         cursor.execute(query, (self.spotify_id, self.term, self.pos, self.user_id))
         self.commit()
         self.conn.close()
 
     def __repr__(self):
-        return 'Artist Spotify_id: %s term: %s position: %s user_id: %s' % (self.spotify_id, self.term, self.pos, self.user_id)
+        return 'Track Spotify_id: %s term: %s position: %s user_id: %s' % (self.spotify_id, self.term, self.pos, self.user_id)
 
     def __eq__(self, other):
         return self.spotify_id == other.spotify_id

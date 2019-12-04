@@ -1,7 +1,7 @@
 from flask import jsonify
 
 from Handlers.Handler import Handler
-from Models.users import Users
+from Entities.users import Users
 
 
 class UserHandler(Handler):

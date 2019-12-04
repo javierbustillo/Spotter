@@ -1,6 +1,6 @@
-from Models.artists import Artists
-from Models.entity import Entity
-from Models.tracks import Tracks
+from Entities.artists import Artists
+from Entities.entity import Entity
+from Entities.tracks import Tracks
 
 
 class MatchCalculator:

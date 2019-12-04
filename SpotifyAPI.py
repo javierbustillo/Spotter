@@ -1,8 +1,8 @@
 import requests
 import json
 
-from Models.artists import Artists
-from Models.tracks import Tracks
+from Entities.artists import Artists
+from Entities.tracks import Tracks
 
 
 class SpotifyAPI:
