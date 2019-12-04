@@ -47,6 +47,7 @@ class App extends Component {
       })
       .then(function (response) {
         console.log("Success: " + response.status);
+        console.log("Refresh Token: " + sessionStorage.getItem('refresh_token'))
       })
       .catch((error)=>  {
 

@@ -49,7 +49,14 @@ class Match extends Component{
             selectedUserName:'',
             selectedUserImage:'',
             selectedUserFollowers:'',
-            selectedUserPlaylists:''
+            selectedUserPlaylists:'',
+            selectedUserInstagram:'',
+            selectedUserTwitter:'',
+            selectedUserUrl:'',
+            overlapArtists:'',
+            overlapTracks:'',
+            track:'',
+            artist:''
         }
 
         if(sessionStorage.getItem('access_token') !== null){
@@ -122,9 +129,21 @@ class Match extends Component{
     }
 
     toggleModal(e){
+        var overlap_artists = ''
+        var overlap_tracks = ''
+        if(!this.state.modalIsOpen){
+            overlap_artists = e.currentTarget.getAttribute('overlap_artists').split(',')
+            overlap_tracks = e.currentTarget.getAttribute('overlap_tracks').split(',')
+        }
+        
         this.setState({
             modalIsOpen: !this.state.modalIsOpen,
-            selectedMatch: e.currentTarget.id
+            selectedMatch: e.currentTarget.id,
+            selectedUserInstagram: e.currentTarget.getAttribute('instagram'),
+            selectedUserTwitter: e.currentTarget.getAttribute('twitter'),
+            overlapArtists: overlap_artists,
+            overlapTracks: overlap_tracks
+
         },()=>{
             var url = "https://api.spotify.com/v1/users/" + this.state.selectedMatch
             axios.get(url, {
@@ -134,6 +153,7 @@ class Match extends Component{
             }).then((res)=>{
                     console.log(res)
                     this.setState({
+                        selectedUserUrl: res.data.external_urls.spotify,
                         selectedUserName:res.data.display_name,
                         selectedUserImage:res.data.images[0].url,
                         selectedUserFollowers:res.data.followers.total
@@ -144,13 +164,26 @@ class Match extends Component{
                     console.log("Error: " + error);
                 });
                 
-                
-        })
+                const overlapArtists = this.state.overlapArtists;
+                var artistNameArray = [];
+                Object.keys(overlapArtists).map(artist=>{
+                    
+                    spotifyWebApi.getArtist(overlapArtists[artist]).then((res)=>{
+                        artistNameArray.push(res.name)
+                    })
+                })
+                this.setState({overlapArtists: artistNameArray})
 
-        spotifyWebApi.getUserPlaylists().then((res)=>{
-            this.setState({selectedUserPlaylists:res.items})
+                const overlapTracks = this.state.overlapTracks;
+                var tracksNameArray = [];
+                Object.keys(overlapTracks).map(track=>{
+                    spotifyWebApi.getTrack(overlapTracks[track]).then((res)=>{
+                        tracksNameArray.push(res.name)
+                    })
+                })
+                console.log(tracksNameArray)
+                this.setState({overlapTracks: tracksNameArray})
         })
-
             
         }
 
@@ -176,12 +209,27 @@ class Match extends Component{
         }
     }
 
-    follow = (event) =>{
-        event.preventDefault();
-        // spotifyWebApi.followUsers(this.state.selectedMatch.toString()).then((res)=>{
-        //     console.log("Now following: "+this.state.selectedMatch);
-        // })
-        console.log(this.state.selectedMatch)
+    loadMatchSocialMedia(){
+        var instagram_link = <p>No Account Available</p>
+        var twitter_link = <p>No Account Available</p>
+        if(this.state.selectedUserInstagram){
+            var url = "https://www.instagram.com/" + this.state.selectedUserInstagram
+            instagram_link = <a href={url} target="_blank">{this.state.selectedUserInstagram}</a>
+        }
+        if(this.state.selectedUserInstagram){
+            var url = "https://www.twitter.com/" + this.state.selectedUserTwitter
+            twitter_link = <a href={url} target="_blank">{this.state.selectedUserTwitter}</a>
+        }
+
+        return(
+            <div className="social-media">
+                <img className="logo" src={instagram}></img>
+                {instagram_link}
+                <img className="logo" src={twitter} />
+                {twitter_link}
+            </div>
+        )
+        
     }
 
     render(){
@@ -191,7 +239,7 @@ class Match extends Component{
                 percent = matches[match].match_value.toFixed(2)
                 
                 return(
-                    <Media id={matches[match].spotify_id} onClick={this.toggleModal.bind(this)} className="match-card">
+                    <Media id={matches[match].spotify_id} overlap_artists={matches[match].overlap_artists} overlap_tracks={matches[match].overlap_tracks}instagram={matches[match].inst_profile} twitter={matches[match].tw_profile} onClick={this.toggleModal.bind(this)} className="match-card">
                          {/* User Image */}
                          <Media className="match-image" left href="#">
                             <img className="match-image"src={matches[match].profile_picture[0].url}/>
@@ -233,6 +281,28 @@ class Match extends Component{
                 
             })
 
+            const overlapArtists = this.state.overlapArtists;
+            const overlapArtistsList = Object.keys(overlapArtists).map(artist=>{
+                if(artist % 2 === 0){
+                    return(<p className="card-text-even">{overlapArtists[artist]}</p>)
+                }else{
+                    return(<p className="card-text-odd">{overlapArtists[artist]}</p>)
+
+                }
+            })
+
+            const overlapTracks = this.state.overlapTracks;
+            const overlapTracksList = Object.keys(overlapTracks).map(track=>{
+                if(track % 2 === 0){
+                    return(<p className="card-text-even">{overlapTracks[track]}</p>)
+                }else{
+                    return(<p className="card-text-odd">{overlapTracks[track]}</p>)
+
+                }
+            })
+
+            
+
 
         return(
             <div className="main-container">
@@ -250,7 +320,10 @@ class Match extends Component{
                                         <div className="match-modal-top-left">
                                             <p className="match-username">{this.state.selectedUserName}</p>
                                             <p className="match-followers">Followers: {this.state.selectedUserFollowers}</p>
-                                            <Button color="success" className="follow-button" onClick={this.follow.bind(this)}>Follow</Button>
+                                            <a href={this.state.selectedUserUrl} target="_blank">
+                                            <Button color="success" className="follow-button">Follow</Button>
+
+                                            </a>
                                         </div>
                                         <div className="match-modal-top-right">
                                             <div className="match-modal-value">
@@ -269,20 +342,22 @@ class Match extends Component{
                                     </div>
                                     
                                     <p className="social-media-title">Follow Them On Social Media:</p>
-                                    <div className="social-media">
-                                            <img className="logo" src={instagram}></img>
-                                            <a href="https://www.instagram.com/gaby_rosario4" target="_blank">sample_instagram</a>
-                                            <img className="logo" src={twitter} />
-                                            <a href="https://www.twitter.com/grosario4" target="_blank">sample_twitter</a>
-                                    </div>
+                                    {this.loadMatchSocialMedia()}
 
                                     <Card className="match-music-card">
-                                        <CardTitle className="match-card-title">My Playlists</CardTitle>
-                                        {playlistsList}
+                                        <CardTitle className="match-card-title">Artists In Common</CardTitle>
+                                        {overlapArtistsList}
+                                    </Card>
+                                    <br/>
+                                    <Card className="match-music-card">
+                                        <CardTitle className="match-card-title">Tracks In Common</CardTitle>
+                                        {overlapTracksList}
                                     </Card>
                                 </ModalBody>
                                 <ModalFooter>
-                                    <Button color="success" className="follow-button" onClick={this.follow.bind(this)}>Follow</Button>
+                                    <a href={this.state.selectedUserUrl} target="_blank">
+                                        <Button color="success" className="follow-button">Follow</Button>
+                                    </a>                                    
                                     <Button color="secondary" onClick={this.toggleModal.bind(this)}>Close</Button>
                                 </ModalFooter>
                             </Modal>
