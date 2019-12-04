@@ -52,7 +52,11 @@ class Match extends Component{
             selectedUserPlaylists:'',
             selectedUserInstagram:'',
             selectedUserTwitter:'',
-            selectedUserUrl:''
+            selectedUserUrl:'',
+            overlapArtists:'',
+            overlapTracks:'',
+            track:'',
+            artist:''
         }
 
         if(sessionStorage.getItem('access_token') !== null){
@@ -125,12 +129,21 @@ class Match extends Component{
     }
 
     toggleModal(e){
-        console.log(e.currentTarget.getAttribute('instagram'))
+        var overlap_artists = ''
+        var overlap_tracks = ''
+        if(!this.state.modalIsOpen){
+            overlap_artists = e.currentTarget.getAttribute('overlap_artists').split(',')
+            overlap_tracks = e.currentTarget.getAttribute('overlap_tracks').split(',')
+        }
+        
         this.setState({
             modalIsOpen: !this.state.modalIsOpen,
             selectedMatch: e.currentTarget.id,
             selectedUserInstagram: e.currentTarget.getAttribute('instagram'),
-            selectedUserTwitter: e.currentTarget.getAttribute('twitter')
+            selectedUserTwitter: e.currentTarget.getAttribute('twitter'),
+            overlapArtists: overlap_artists,
+            overlapTracks: overlap_tracks
+
         },()=>{
             var url = "https://api.spotify.com/v1/users/" + this.state.selectedMatch
             axios.get(url, {
@@ -150,9 +163,26 @@ class Match extends Component{
                 .catch((error)=>  {
                     console.log("Error: " + error);
                 });
-            spotifyWebApi.getUserPlaylists(this.state.selectedMatch).then((res)=>{
-                this.setState({selectedUserPlaylists:res.items})
-            })
+                
+                const overlapArtists = this.state.overlapArtists;
+                var artistNameArray = [];
+                Object.keys(overlapArtists).map(artist=>{
+                    
+                    spotifyWebApi.getArtist(overlapArtists[artist]).then((res)=>{
+                        artistNameArray.push(res.name)
+                    })
+                })
+                this.setState({overlapArtists: artistNameArray})
+
+                const overlapTracks = this.state.overlapTracks;
+                var tracksNameArray = [];
+                Object.keys(overlapTracks).map(track=>{
+                    spotifyWebApi.getTrack(overlapTracks[track]).then((res)=>{
+                        tracksNameArray.push(res.name)
+                    })
+                })
+                console.log(tracksNameArray)
+                this.setState({overlapTracks: tracksNameArray})
         })
             
         }
@@ -209,7 +239,7 @@ class Match extends Component{
                 percent = matches[match].match_value.toFixed(2)
                 
                 return(
-                    <Media id={matches[match].spotify_id} instagram={matches[match].inst_profile} twitter={matches[match].tw_profile} onClick={this.toggleModal.bind(this)} className="match-card">
+                    <Media id={matches[match].spotify_id} overlap_artists={matches[match].overlap_artists} overlap_tracks={matches[match].overlap_tracks}instagram={matches[match].inst_profile} twitter={matches[match].tw_profile} onClick={this.toggleModal.bind(this)} className="match-card">
                          {/* User Image */}
                          <Media className="match-image" left href="#">
                             <img className="match-image"src={matches[match].profile_picture[0].url}/>
@@ -250,6 +280,28 @@ class Match extends Component{
                 }
                 
             })
+
+            const overlapArtists = this.state.overlapArtists;
+            const overlapArtistsList = Object.keys(overlapArtists).map(artist=>{
+                if(artist % 2 === 0){
+                    return(<p className="card-text-even">{overlapArtists[artist]}</p>)
+                }else{
+                    return(<p className="card-text-odd">{overlapArtists[artist]}</p>)
+
+                }
+            })
+
+            const overlapTracks = this.state.overlapTracks;
+            const overlapTracksList = Object.keys(overlapTracks).map(track=>{
+                if(track % 2 === 0){
+                    return(<p className="card-text-even">{overlapTracks[track]}</p>)
+                }else{
+                    return(<p className="card-text-odd">{overlapTracks[track]}</p>)
+
+                }
+            })
+
+            
 
 
         return(
@@ -293,8 +345,13 @@ class Match extends Component{
                                     {this.loadMatchSocialMedia()}
 
                                     <Card className="match-music-card">
-                                        <CardTitle className="match-card-title">My Playlists</CardTitle>
-                                        {playlistsList}
+                                        <CardTitle className="match-card-title">Artists In Common</CardTitle>
+                                        {overlapArtistsList}
+                                    </Card>
+                                    <br/>
+                                    <Card className="match-music-card">
+                                        <CardTitle className="match-card-title">Tracks In Common</CardTitle>
+                                        {overlapTracksList}
                                     </Card>
                                 </ModalBody>
                                 <ModalFooter>
