@@ -1,7 +1,6 @@
 from Models.artists import Artists
-from Models.model import Model
+from Models.entity import Entity
 from Models.tracks import Tracks
-from SpotifyAPI import SpotifyAPI
 
 
 class MatchCalculator:
@@ -12,6 +11,17 @@ class MatchCalculator:
         self.common_position_weight = common_position_weight
         self.artist_weight = artist_weight
         self.track_weight = track_weight
+    
+    def calculate_denominator(self, obj_list_x, obj_list_y):
+        return max(len(obj_list_x), len(obj_list_y))
+
+    def calculate_track_or_artist_value(self, common_objs, common_positions, common_terms, denominator):
+        return (common_objs / denominator) * self.common_weight + \
+                      (common_positions / denominator) * self.common_position_weight + \
+                      (common_terms / denominator) * self.common_terms_weight if denominator > 0 else 0
+
+    def calculate_total_match(self, track_value, artist_value):
+        return (track_value * self.track_weight + artist_value * self.artist_weight) * 100
 
     @staticmethod
     def count_common(user_objs, common_objs):
@@ -52,20 +62,9 @@ class MatchCalculator:
             index += 1
 
         return common_obj_count, common_positions, common_terms
-    
-    def calculate_denominator(self, obj_list_x, obj_list_y):
-        return max(len(obj_list_x), len(obj_list_y))
-
-    def calculate_track_or_artist_value(self, common_objs, common_positions, common_terms, denominator):
-        return (common_objs / denominator) * self.common_weight + \
-                      (common_positions / denominator) * self.common_position_weight + \
-                      (common_terms / denominator) * self.common_terms_weight if denominator > 0 else 0
-
-    def calculate_total_match(self, track_value, artist_value):
-        return (track_value * self.track_weight + artist_value * self.artist_weight) * 100
 
 
-class Users(Model):
+class Users(Entity):
     match_value = 0
     threshold = 1
     calculator = MatchCalculator()

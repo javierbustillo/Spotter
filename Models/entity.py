@@ -3,7 +3,7 @@ import psycopg2
 import psycopg2.extras
 
 
-class Model:
+class Entity:
 
     def __init__(self):
         self.URL = os.environ['DATABASE_URL']

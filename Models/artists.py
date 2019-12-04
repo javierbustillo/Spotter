@@ -1,7 +1,7 @@
-from Models.model import Model
+from Models.entity import Entity
 
 
-class Artists(Model):
+class Artists(Entity):
     spotify_id = None
     term = None
     pos = None
