@@ -90,7 +90,7 @@ class Users(Entity):
         cursor = self.get_cursor()
         query = 'SELECT tw_profile, inst_profile from users where spotify_id = %s'
         cursor.execute(query, (self.spotify_id,))
-        return cursor.fetchall()[0]
+        return cursor.fetchall()[0] if len(cursor.fetchall()) > 0 else {'tw_profile': '', 'inst_profile': ''}
 
     def delete_user_tracks_artists(self):
         cursor = self.get_cursor()
