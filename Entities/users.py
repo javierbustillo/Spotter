@@ -5,7 +5,7 @@ from Entities.tracks import Tracks
 
 class MatchCalculator:
 
-    def __init__(self, common_weight=0.8, common_terms_weight=0.1, common_position_weight=0.1, artist_weight=0.5, track_weight=0.5):
+    def __init__(self, common_weight=0.8, common_terms_weight=0.1, common_position_weight=0.1, artist_weight=0.8, track_weight=0.2):
         self.common_weight = common_weight
         self.common_terms_weight = common_terms_weight
         self.common_position_weight = common_position_weight
