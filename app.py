@@ -59,5 +59,25 @@ def match_list():
     return jsonify(dict_match)
 
 
+@app.route('/users/compare', methods=['GET', 'POST'])
+def compare_users():
+    if request.method == 'POST':
+        access_token = request.json['access_token']
+        tmp_id = UserHandler().create_tmp_id(access_token)
+        response = jsonify(tmp_id=tmp_id)
+    else:
+        access_token = request.args["access_token"]
+        tmp_id = request.args['tmp']
+        match = UserHandler().get_match(tmp_id, access_token)
+        match_dict = match.__dict__
+        match_dict.pop('conn')
+        match_dict.pop('URL')
+        user_info = SpotifyAPI().get_user_by_id(access_token, match.spotify_id)
+        match_dict['display_name'] = user_info['display_name']
+        match_dict['profile_picture'] = user_info['images']
+        response = jsonify(match_dict)
+    return response
+
+
 if __name__ == '__main__':
     app.run()

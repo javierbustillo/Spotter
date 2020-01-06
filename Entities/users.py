@@ -83,6 +83,13 @@ class Users(Entity):
         cursor.execute(query, (self.spotify_id, self.access_token, self.tw_profile, self.inst_profile))
         self.commit()
 
+    def create_tmp_id(self):
+        cursor = self.get_cursor()
+        query = 'INSERT INTO overlap_id (access_token, tmp_id) VALUES (%s, uuid_generate_v4()) RETURNING tmp_id'
+        cursor.execute(query, (self.access_token, ))
+        self.commit()
+        return cursor.fetchone()['tmp_id']
+
     def get_profile(self):
         cursor = self.get_cursor()
         query = 'SELECT tw_profile, inst_profile from users where spotify_id = %s'
@@ -91,6 +98,12 @@ class Users(Entity):
             return cursor.fetchall()[0]
         except IndexError:
             return {'tw_profile': '', 'inst_profile': ''}
+
+    def get_token_by_tmp_id(self, tmp_id):
+        cursor = self.get_cursor()
+        query = 'SELECT access_token FROM overlap_id where tmp_id = %s'
+        cursor.execute(query, (tmp_id, ))
+        return cursor.fetchone()['access_token']
 
     def delete_user_tracks_artists(self):
         cursor = self.get_cursor()

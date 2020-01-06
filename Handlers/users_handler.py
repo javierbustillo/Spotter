@@ -22,6 +22,11 @@ class UserHandler(Handler):
         self._add_objs(access_token)
         return user
 
+    def create_tmp_id(self, access_token):
+        spotify_id = self.SpotifyAPI.get_user_info(access_token)["id"]
+        user = Users(spotify_id, access_token, None, None)
+        return user.create_tmp_id()
+
     def get_user(self, access_token):
         spotify_id = self.SpotifyAPI.get_user_info(access_token)['id']
         user = Users(spotify_id, access_token, None, None)
@@ -55,3 +60,17 @@ class UserHandler(Handler):
         matches.sort(key=lambda x: x.match_value, reverse=True)
         return matches
 
+    def get_match(self, tmp_id, access_token):
+        spotify_id = self.SpotifyAPI.get_user_info(access_token)['id']
+        user = Users(spotify_id, None, None, None)
+
+        token_to_cmp = Users(None, None, None, None).get_token_by_tmp_id(tmp_id)
+        spotify_id_cmp = self.SpotifyAPI.get_user_info(token_to_cmp)['id']
+        user_cmp = Users(spotify_id_cmp, None, None, None)
+
+        match_value = user.calculate_match(user_cmp)
+        user_cmp.match_value = match_value
+        user_cmp.overlap_artists = user.overlap_artists(user_cmp)
+        user_cmp.overlap_tracks = user.overlap_tracks(user_cmp)
+
+        return user_cmp

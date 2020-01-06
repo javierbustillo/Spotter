@@ -22,6 +22,12 @@ CREATE TABLE Artists(
     user_id varchar(500) REFERENCES Users (spotify_id)
     );
 
+CREATE TABLE Overlap_id(
+   tmp_id UUID PRIMARY KEY,
+   access_token VARCHAR(500),
+   created_at   TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+)
+
 
 DROP TABLE IF EXISTS "users" CASCADE;
 DROP TABLE IF EXISTS "tracks" CASCADE;
