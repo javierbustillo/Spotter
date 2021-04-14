@@ -97,7 +97,7 @@ class Users(Entity):
         try:
             return cursor.fetchall()[0]
         except IndexError:
-            return {'tw_profile': '', 'inst_profile': ''}
+            return None
 
     def get_token_by_tmp_id(self, tmp_id):
         cursor = self.get_cursor()

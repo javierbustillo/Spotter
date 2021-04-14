@@ -46,6 +46,9 @@ def update_user():
 @app.route('/users/match', methods=['POST'])
 def match_list():
     access_token = request.json['access_token']
+    user = UserHandler().get_user(access_token)
+    if user is None:
+        UserHandler().create_user(access_token, '', '')
     matches = UserHandler().get_matches(access_token)
     dict_match = []
     for match in matches:
